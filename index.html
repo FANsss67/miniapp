@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Финансы</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f0f1a;
+    color: #ffffff;
+    min-height: 100vh;
+    padding: 16px;
+  }
+
+  .header {
+    text-align: center;
+    padding: 20px 0 10px;
+  }
+
+  .header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .header p {
+    color: #888;
+    font-size: 13px;
+    margin-top: 4px;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  .card {
+    background: #1a1a2e;
+    border-radius: 16px;
+    padding: 16px;
+    border: 1px solid #2a2a4a;
+  }
+
+  .card.wide {
+    grid-column: 1 / -1;
+  }
+
+  .card-label {
+    font-size: 11px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+
+  .card-value {
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  .card-value.green  { color: #4ade80; }
+  .card-value.red    { color: #f87171; }
+  .card-value.purple { color: #a78bfa; }
+
+  .card-sub {
+    font-size: 11px;
+    color: #666;
+    margin-top: 4px;
+  }
+
+  .section {
+    background: #1a1a2e;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+    border: 1px solid #2a2a4a;
+  }
+
+  .section-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #ccc;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .chart-wrap {
+    position: relative;
+    height: 200px;
+  }
+
+  .project-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #2a2a4a;
+  }
+
+  .project-row:last-child { border-bottom: none; }
+
+  .project-name {
+    font-size: 14px;
+    color: #ddd;
+  }
+
+  .project-amount {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .project-amount.pos { color: #4ade80; }
+  .project-amount.neg { color: #f87171; }
+
+  .crypto-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #2a2a4a;
+  }
+
+  .crypto-row:last-child { border-bottom: none; }
+
+  .crypto-name {
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .crypto-price {
+    text-align: right;
+  }
+
+  .crypto-price .usd {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .crypto-price .change {
+    font-size: 12px;
+    margin-top: 2px;
+  }
+
+  .change.up   { color: #4ade80; }
+  .change.down { color: #f87171; }
+
+  .loading {
+    text-align: center;
+    color: #555;
+    padding: 40px;
+    font-size: 14px;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .tab {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+    background: #2a2a4a;
+    color: #888;
+    border: none;
+    transition: all 0.2s;
+  }
+
+  .tab.active {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .refresh-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>💰 Мои Финансы</h1>
+  <p id="month-label">Загрузка...</p>
+</div>
+
+<!-- Вкладки -->
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('overview')">📊 Обзор</button>
+  <button class="tab" onclick="switchTab('projects')">📁 Проекты</button>
+  <button class="tab" onclick="switchTab('charts')">📈 Графики</button>
+  <button class="tab" onclick="switchTab('crypto')">🪙 Крипта</button>
+</div>
+
+<!-- ОБЗОР -->
+<div id="tab-overview" class="tab-content active">
+  <div class="cards">
+    <div class="card">
+      <div class="card-label">💚 Доходы</div>
+      <div class="card-value green" id="total-income">—</div>
+      <div class="card-sub">за месяц</div>
+    </div>
+    <div class="card">
+      <div class="card-label">❤️ Расходы</div>
+      <div class="card-value red" id="total-expense">—</div>
+      <div class="card-sub">за месяц</div>
+    </div>
+    <div class="card wide">
+      <div class="card-label">🏦 Баланс</div>
+      <div class="card-value purple" id="total-balance">—</div>
+      <div class="card-sub" id="balance-sub">—</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">🏷 Топ расходов</div>
+    <div id="top-expenses"><div class="loading">Загрузка...</div></div>
+  </div>
+</div>
+
+<!-- ПРОЕКТЫ -->
+<div id="tab-projects" class="tab-content">
+  <div class="section">
+    <div class="section-title">📁 По проектам</div>
+    <div id="projects-list"><div class="loading">Загрузка...</div></div>
+  </div>
+</div>
+
+<!-- ГРАФИКИ -->
+<div id="tab-charts" class="tab-content">
+  <div class="section">
+    <div class="section-title">🍩 Расходы по категориям</div>
+    <div class="chart-wrap">
+      <canvas id="pie-chart"></canvas>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title">📊 Доходы и расходы по месяцам</div>
+    <div class="chart-wrap">
+      <canvas id="bar-chart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- КРИПТА -->
+<div id="tab-crypto" class="tab-content">
+  <div class="section">
+    <div class="section-title">🪙 Курсы криптовалют</div>
+    <div id="crypto-list"><div class="loading">Загрузка...</div></div>
+  </div>
+</div>
+
+<button class="refresh-btn" onclick="loadAll()">🔄 Обновить</button>
+
+<script>
+// =============================================
+// НАСТРОЙКИ — ВСТАВЬТЕ ВАШ URL
+// =============================================
+const API_URL = 'https://script.google.com/macros/s/AKfycbyppouk7LMv5oEq0yjzM6iJoteQtM4HavFMB3fRqfSmh_WsYF59kV0PS6goVegnN927/exec';
+
+let pieChart = null;
+let barChart = null;
+
+// =============================================
+// ЗАГРУЗКА ДАННЫХ
+// =============================================
+async function loadAll() {
+  updateMonthLabel();
+  await Promise.all([
+    loadFinanceData(),
+    loadCrypto()
+  ]);
+}
+
+function updateMonthLabel() {
+  const now = new Date();
+  document.getElementById('month-label').textContent =
+    now.toLocaleString('ru', { month: 'long', year: 'numeric' });
+}
+
+async function loadFinanceData() {
+  try {
+    const resp = await fetch(API_URL + '?action=getStats');
+    const data = await resp.json();
+    renderOverview(data);
+    renderProjects(data);
+    renderCharts(data);
+  } catch(e) {
+    console.error('Finance load error:', e);
+  }
+}
+
+async function loadCrypto() {
+  try {
+    const resp = await fetch(
+      'https://api.coingecko.com/api/v3/simple/price?ids=ethereum,bitcoin,tether&vs_currencies=usd,rub&include_24hr_change=true'
+    );
+    const data = await resp.json();
+    renderCrypto(data);
+  } catch(e) {
+    document.getElementById('crypto-list').innerHTML =
+      '<div class="loading">Не удалось загрузить курсы</div>';
+  }
+}
+
+// =============================================
+// РЕНДЕР
+// =============================================
+function renderOverview(data) {
+  const income  = data.income  || 0;
+  const expense = data.expense || 0;
+  const balance = income - expense;
+
+  document.getElementById('total-income').textContent  = '+' + fmt(income)  + ' ₽';
+  document.getElementById('total-expense').textContent = '-' + fmt(expense) + ' ₽';
+
+  const balEl = document.getElementById('total-balance');
+  balEl.textContent = (balance >= 0 ? '+' : '') + fmt(balance) + ' ₽';
+  balEl.className   = 'card-value ' + (balance >= 0 ? 'green' : 'red');
+
+  document.getElementById('balance-sub').textContent =
+    balance >= 0 ? '🟢 Всё хорошо!' : '🔴 Расходы превышают доходы';
+
+  // Топ расходов
+  const cats = data.byCategory || {};
+  const sorted = Object.entries(cats)
+    .sort(([,a],[,b]) => b - a)
+    .slice(0, 5);
+
+  document.getElementById('top-expenses').innerHTML = sorted.length
+    ? sorted.map(([cat, val]) =>
+        '<div class="project-row">' +
+        '<span class="project-name">' + cat + '</span>' +
+        '<span class="project-amount neg">-' + fmt(val) + ' ₽</span>' +
+        '</div>'
+      ).join('')
+    : '<div class="loading">Нет данных</div>';
+}
+
+function renderProjects(data) {
+  const projects = data.byProject || {};
+  const sorted   = Object.entries(projects).sort(([,a],[,b]) => b - a);
+
+  document.getElementById('projects-list').innerHTML = sorted.length
+    ? sorted.map(([proj, val]) =>
+        '<div class="project-row">' +
+        '<span class="project-name">📁 ' + proj + '</span>' +
+        '<span class="project-amount ' + (val >= 0 ? 'pos' : 'neg') + '">' +
+        (val >= 0 ? '+' : '') + fmt(val) + ' ₽</span>' +
+        '</div>'
+      ).join('')
+    : '<div class="loading">Нет данных</div>';
+}
+
+function renderCharts(data) {
+  // Круговая диаграмма
+  const cats   = data.byCategory || {};
+  const labels = Object.keys(cats);
+  const values = Object.values(cats);
+
+  const colors = [
+    '#667eea','#764ba2','#f093fb','#4ade80',
+    '#f87171','#fbbf24','#60a5fa','#a78bfa'
+  ];
+
+  if (pieChart) pieChart.destroy();
+  pieChart = new Chart(document.getElementById('pie-chart'), {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{
+        data: values,
+        backgroundColor: colors,
+        borderWidth: 0
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { color: '#aaa', font: { size: 11 }, padding: 8 }
+        }
+      }
+    }
+  });
+
+  // Гистограмма по месяцам
+  const monthly = data.monthly || {};
+  const months  = Object.keys(monthly).slice(-6);
+
+  if (barChart) barChart.destroy();
+  barChart = new Chart(document.getElementById('bar-chart'), {
+    type: 'bar',
+    data: {
+      labels: months,
+      datasets: [
+        {
+          label: 'Доходы',
+          data: months.map(m => monthly[m]?.income || 0),
+          backgroundColor: '#4ade80',
+          borderRadius: 6
+        },
+        {
+          label: 'Расходы',
+          data: months.map(m => monthly[m]?.expense || 0),
+          backgroundColor: '#f87171',
+          borderRadius: 6
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          labels: { color: '#aaa', font: { size: 11 } }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#888' }, grid: { color: '#2a2a4a' } },
+        y: { ticks: { color: '#888' }, grid: { color: '#2a2a4a' } }
+      }
+    }
+  });
+}
+
+function renderCrypto(data) {
+  const coins = {
+    ethereum: { name: 'Ethereum', symbol: 'ETH', emoji: '💎' },
+    bitcoin:  { name: 'Bitcoin',  symbol: 'BTC', emoji: '₿'  },
+    tether:   { name: 'Tether',   symbol: 'USDT', emoji: '💵' }
+  };
+
+  let html = '';
+  for (const [id, info] of Object.entries(coins)) {
+    const d      = data[id];
+    if (!d) continue;
+    const change = d.usd_24h_change?.toFixed(2) || '0';
+    const isUp   = parseFloat(change) >= 0;
+
+    html +=
+      '<div class="crypto-row">' +
+      '<div>' +
+      '<div class="crypto-name">' + info.emoji + ' ' + info.symbol + '</div>' +
+      '<div style="font-size:11px;color:#666">' + info.name + '</div>' +
+      '</div>' +
+      '<div class="crypto-price">' +
+      '<div class="usd">$' + d.usd.toLocaleString('en') + '</div>' +
+      '<div class="change ' + (isUp ? 'up' : 'down') + '">' +
+      (isUp ? '▲' : '▼') + ' ' + Math.abs(change) + '%' +
+      '</div>' +
+      '</div>' +
+      '</div>';
+  }
+
+  document.getElementById('crypto-list').innerHTML = html || '<div class="loading">Нет данных</div>';
+}
+
+// =============================================
+// ВКЛАДКИ
+// =============================================
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    const names = ['overview','projects','charts','crypto'];
+    t.classList.toggle('active', names[i] === name);
+  });
+  document.querySelectorAll('.tab-content').forEach(c => {
+    c.classList.toggle('active', c.id === 'tab-' + name);
+  });
+}
+
+// =============================================
+// УТИЛИТЫ
+// =============================================
+function fmt(n) {
+  return Math.round(n).toLocaleString('ru');
+}
+
+// Запуск
+loadAll();
+</script>
+</body>
+</html>
