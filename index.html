@@ -155,6 +155,84 @@
   .change.up   { color: #4ade80; }
   .change.down { color: #f87171; }
 
+  .account-card {
+    background: #16162a;
+    border: 1px solid #2a2a4a;
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .account-card:last-child { margin-bottom: 0; }
+
+  .account-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .account-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    background: #2a2a4a;
+    flex-shrink: 0;
+  }
+
+  .account-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #eee;
+  }
+
+  .account-type {
+    font-size: 11px;
+    color: #666;
+    margin-top: 2px;
+  }
+
+  .account-balance {
+    text-align: right;
+  }
+
+  .account-balance .amount {
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .account-balance .currency {
+    font-size: 11px;
+    color: #666;
+    margin-top: 2px;
+  }
+
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0 4px;
+    border-top: 1px solid #2a2a4a;
+    margin-top: 4px;
+  }
+
+  .total-row .label {
+    font-size: 13px;
+    color: #888;
+  }
+
+  .total-row .value {
+    font-size: 16px;
+    font-weight: 700;
+    color: #a78bfa;
+  }
+
   .loading {
     text-align: center;
     color: #555;
@@ -217,6 +295,7 @@
   <button class="tab" onclick="switchTab('projects')">📁 Проекты</button>
   <button class="tab" onclick="switchTab('charts')">📈 Графики</button>
   <button class="tab" onclick="switchTab('crypto')">🪙 Крипта</button>
+  <button class="tab" onclick="switchTab('accounts')">🏦 Счета</button>
 </div>
 
 <!-- ОБЗОР -->
@@ -277,26 +356,28 @@
   </div>
 </div>
 
+<!-- СЧЕТА -->
+<div id="tab-accounts" class="tab-content">
+  <div class="section">
+    <div class="section-title">🏦 Балансы счетов</div>
+    <div id="accounts-list"><div class="loading">Загрузка...</div></div>
+  </div>
+</div>
+
 <button class="refresh-btn" onclick="loadAll()">🔄 Обновить</button>
 
 <script>
-// =============================================
-// НАСТРОЙКИ — ВСТАВЬТЕ ВАШ URL
-// =============================================
 const API_URL = 'https://script.google.com/macros/s/AKfycbyppouk7LMv5oEq0yjzM6iJoteQtM4HavFMB3fRqfSmh_WsYF59kV0PS6goVegnN927/exec';
 
 let pieChart = null;
 let barChart = null;
 
 // =============================================
-// ЗАГРУЗКА ДАННЫХ
+// ЗАГРУЗКА
 // =============================================
 async function loadAll() {
   updateMonthLabel();
-  await Promise.all([
-    loadFinanceData(),
-    loadCrypto()
-  ]);
+  await Promise.all([loadFinanceData(), loadCrypto()]);
 }
 
 function updateMonthLabel() {
@@ -312,6 +393,7 @@ async function loadFinanceData() {
     renderOverview(data);
     renderProjects(data);
     renderCharts(data);
+    renderAccounts(data);
   } catch(e) {
     console.error('Finance load error:', e);
   }
@@ -348,11 +430,8 @@ function renderOverview(data) {
   document.getElementById('balance-sub').textContent =
     balance >= 0 ? '🟢 Всё хорошо!' : '🔴 Расходы превышают доходы';
 
-  // Топ расходов
-  const cats = data.byCategory || {};
-  const sorted = Object.entries(cats)
-    .sort(([,a],[,b]) => b - a)
-    .slice(0, 5);
+  const cats   = data.byCategory || {};
+  const sorted = Object.entries(cats).sort(([,a],[,b]) => b - a).slice(0, 5);
 
   document.getElementById('top-expenses').innerHTML = sorted.length
     ? sorted.map(([cat, val]) =>
@@ -379,8 +458,61 @@ function renderProjects(data) {
     : '<div class="loading">Нет данных</div>';
 }
 
+function renderAccounts(data) {
+  const accounts = data.byAccount || {};
+  const entries  = Object.entries(accounts);
+
+  if (!entries.length) {
+    document.getElementById('accounts-list').innerHTML =
+      '<div class="loading">Нет данных. Добавь счета в таблицу.</div>';
+    return;
+  }
+
+  const typeEmoji = {
+    'Карта':    '💳',
+    'Крипта':   '🪙',
+    'Наличные': '💵',
+    'Другое':   '🏦'
+  };
+
+  // Считаем общую сумму в RUB (только рублёвые счета)
+  let totalRub = 0;
+
+  let html = entries.map(([name, info]) => {
+    const emoji = typeEmoji[info.type] || '🏦';
+    const val   = info.balance || 0;
+    const cls   = val >= 0 ? '#4ade80' : '#f87171';
+    const sign  = val >= 0 ? '+' : '';
+
+    if (info.currency === 'RUB') totalRub += val;
+
+    return '<div class="account-card">' +
+      '<div class="account-left">' +
+        '<div class="account-icon">' + emoji + '</div>' +
+        '<div>' +
+          '<div class="account-name">' + name + '</div>' +
+          '<div class="account-type">' + (info.type || 'Счёт') + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="account-balance">' +
+        '<div class="amount" style="color:' + cls + '">' + sign + fmt(val) + '</div>' +
+        '<div class="currency">' + info.currency + '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  // Итого по рублям
+  if (totalRub !== 0) {
+    html += '<div class="total-row">' +
+      '<span class="label">Итого (RUB):</span>' +
+      '<span class="value">' + (totalRub >= 0 ? '+' : '') + fmt(totalRub) + ' ₽</span>' +
+    '</div>';
+  }
+
+  document.getElementById('accounts-list').innerHTML = html;
+}
+
 function renderCharts(data) {
-  // Круговая диаграмма
   const cats   = data.byCategory || {};
   const labels = Object.keys(cats);
   const values = Object.values(cats);
@@ -395,25 +527,17 @@ function renderCharts(data) {
     type: 'doughnut',
     data: {
       labels,
-      datasets: [{
-        data: values,
-        backgroundColor: colors,
-        borderWidth: 0
-      }]
+      datasets: [{ data: values, backgroundColor: colors, borderWidth: 0 }]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
-        legend: {
-          position: 'bottom',
-          labels: { color: '#aaa', font: { size: 11 }, padding: 8 }
-        }
+        legend: { position: 'bottom', labels: { color: '#aaa', font: { size: 11 }, padding: 8 } }
       }
     }
   });
 
-  // Гистограмма по месяцам
   const monthly = data.monthly || {};
   const months  = Object.keys(monthly).slice(-6);
 
@@ -423,28 +547,14 @@ function renderCharts(data) {
     data: {
       labels: months,
       datasets: [
-        {
-          label: 'Доходы',
-          data: months.map(m => monthly[m]?.income || 0),
-          backgroundColor: '#4ade80',
-          borderRadius: 6
-        },
-        {
-          label: 'Расходы',
-          data: months.map(m => monthly[m]?.expense || 0),
-          backgroundColor: '#f87171',
-          borderRadius: 6
-        }
+        { label: 'Доходы',  data: months.map(m => monthly[m]?.income  || 0), backgroundColor: '#4ade80', borderRadius: 6 },
+        { label: 'Расходы', data: months.map(m => monthly[m]?.expense || 0), backgroundColor: '#f87171', borderRadius: 6 }
       ]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          labels: { color: '#aaa', font: { size: 11 } }
-        }
-      },
+      plugins: { legend: { labels: { color: '#aaa', font: { size: 11 } } } },
       scales: {
         x: { ticks: { color: '#888' }, grid: { color: '#2a2a4a' } },
         y: { ticks: { color: '#888' }, grid: { color: '#2a2a4a' } }
@@ -455,14 +565,14 @@ function renderCharts(data) {
 
 function renderCrypto(data) {
   const coins = {
-    ethereum: { name: 'Ethereum', symbol: 'ETH', emoji: '💎' },
-    bitcoin:  { name: 'Bitcoin',  symbol: 'BTC', emoji: '₿'  },
+    ethereum: { name: 'Ethereum', symbol: 'ETH',  emoji: '💎' },
+    bitcoin:  { name: 'Bitcoin',  symbol: 'BTC',  emoji: '₿'  },
     tether:   { name: 'Tether',   symbol: 'USDT', emoji: '💵' }
   };
 
   let html = '';
   for (const [id, info] of Object.entries(coins)) {
-    const d      = data[id];
+    const d = data[id];
     if (!d) continue;
     const change = d.usd_24h_change?.toFixed(2) || '0';
     const isUp   = parseFloat(change) >= 0;
@@ -470,14 +580,14 @@ function renderCrypto(data) {
     html +=
       '<div class="crypto-row">' +
       '<div>' +
-      '<div class="crypto-name">' + info.emoji + ' ' + info.symbol + '</div>' +
-      '<div style="font-size:11px;color:#666">' + info.name + '</div>' +
+        '<div class="crypto-name">' + info.emoji + ' ' + info.symbol + '</div>' +
+        '<div style="font-size:11px;color:#666">' + info.name + '</div>' +
       '</div>' +
       '<div class="crypto-price">' +
-      '<div class="usd">$' + d.usd.toLocaleString('en') + '</div>' +
-      '<div class="change ' + (isUp ? 'up' : 'down') + '">' +
-      (isUp ? '▲' : '▼') + ' ' + Math.abs(change) + '%' +
-      '</div>' +
+        '<div class="usd">$' + d.usd.toLocaleString('en') + '</div>' +
+        '<div class="change ' + (isUp ? 'up' : 'down') + '">' +
+          (isUp ? '▲' : '▼') + ' ' + Math.abs(change) + '%' +
+        '</div>' +
       '</div>' +
       '</div>';
   }
@@ -489,8 +599,8 @@ function renderCrypto(data) {
 // ВКЛАДКИ
 // =============================================
 function switchTab(name) {
-  document.querySelectorAll('.tab').forEach((t,i) => {
-    const names = ['overview','projects','charts','crypto'];
+  const names = ['overview', 'projects', 'charts', 'crypto', 'accounts'];
+  document.querySelectorAll('.tab').forEach((t, i) => {
     t.classList.toggle('active', names[i] === name);
   });
   document.querySelectorAll('.tab-content').forEach(c => {
@@ -505,7 +615,6 @@ function fmt(n) {
   return Math.round(n).toLocaleString('ru');
 }
 
-// Запуск
 loadAll();
 </script>
 </body>
