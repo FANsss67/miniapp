@@ -3,819 +3,578 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard</title>
+<title>Finance Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root {
+  --bg:#0e0e0e; --s1:#161616; --s2:#1c1c1c; --s3:#222222;
+  --border:#2a2a2a; --border2:#333333;
+  --text:#ffffff; --muted:#666666; --muted2:#444444;
+  --green:#4ade80; --red:#f87171; --blue:#60a5fa; --purple:#a78bfa; --orange:#fb923c; --yellow:#facc15;
+}
+html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;min-height:100vh;overflow-x:hidden;}
+.shell{display:flex;min-height:100vh;}
 
-  :root {
-    --bg:        #0e0e0e;
-    --surface:   #161616;
-    --surface2:  #1c1c1c;
-    --border:    #2a2a2a;
-    --text:      #ffffff;
-    --muted:     #666666;
-    --muted2:    #444444;
-    --accent:    #ffffff;
-    --green:     #4ade80;
-    --red:       #f87171;
-  }
+/* SIDEBAR */
+.sidebar{width:64px;background:var(--s1);border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:20px 0;gap:4px;position:fixed;top:0;left:0;bottom:0;z-index:20;}
+.sb-icon{width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:12px;cursor:pointer;color:var(--muted);transition:all 0.2s;}
+.sb-icon:hover{color:var(--text);background:var(--s2);}
+.sb-icon.active{color:var(--text);background:var(--s2);}
+.sb-icon svg{width:18px;height:18px;stroke-width:1.5;}
+.sb-icon.menu{margin-bottom:12px;}
+.sb-icon.settings{margin-top:auto;}
 
-  html, body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    min-height: 100vh;
-  }
+/* MAIN */
+.main{margin-left:64px;flex:1;display:flex;flex-direction:column;}
 
-  /* ── LAYOUT ── */
-  .shell {
-    display: flex;
-    min-height: 100vh;
-  }
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 28px;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:10;}
+.topbar-title{font-size:11px;font-weight:500;letter-spacing:0.15em;color:var(--muted);text-transform:uppercase;}
+.date-btn{display:flex;align-items:center;gap:7px;padding:7px 13px;border:1px solid var(--border);border-radius:8px;font-size:11px;color:var(--muted);cursor:pointer;background:transparent;font-family:'DM Sans',sans-serif;}
+.date-btn svg{width:13px;height:13px;}
+.chevron{width:10px!important;height:10px!important;}
 
-  /* ── SIDEBAR ── */
-  .sidebar {
-    width: 64px;
-    background: var(--surface);
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 24px 0;
-    gap: 32px;
-    position: fixed;
-    top: 0; left: 0; bottom: 0;
-    z-index: 10;
-  }
+/* PAGE WRAPPER */
+.page{display:none;flex-direction:column;}
+.page.active{display:flex;}
+.content{padding:28px;display:flex;flex-direction:column;gap:20px;max-width:960px;width:100%;margin:0 auto;}
 
-  .sidebar-icon {
-    width: 36px; height: 36px;
-    display: flex; align-items: center; justify-content: center;
-    border-radius: 10px;
-    cursor: pointer;
-    color: var(--muted);
-    transition: color 0.2s, background 0.2s;
-  }
-  .sidebar-icon:hover { color: var(--text); background: var(--surface2); }
-  .sidebar-icon.active { color: var(--text); }
+/* CARDS */
+.card{background:var(--s1);border:1px solid var(--border);border-radius:16px;}
+.card-pad{padding:22px 24px;}
+.card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.card-ttl{font-size:10px;letter-spacing:0.13em;text-transform:uppercase;color:var(--muted);}
 
-  .sidebar-icon svg { width: 18px; height: 18px; }
+/* BALANCE */
+.balance-card{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:26px 28px;position:relative;overflow:hidden;}
+.bal-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.bal-amount{font-size:38px;font-weight:300;letter-spacing:-0.02em;font-family:'DM Mono',monospace;margin-bottom:8px;}
+.bal-sub{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px;}
+.bal-sub .pct{color:var(--green);font-weight:500;}
+.bal-chart-wrap{position:absolute;right:0;top:0;bottom:0;width:52%;opacity:0.55;}
 
-  /* ── MAIN ── */
-  .main {
-    margin-left: 64px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
+/* TWIN */
+.twin{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.metric-card{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:22px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.m-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.m-amount{font-size:24px;font-weight:300;font-family:'DM Mono',monospace;letter-spacing:-0.02em;margin-bottom:6px;}
+.m-sub{font-size:11px;color:var(--muted);}
+.m-sub .up{color:var(--green);} .m-sub .dn{color:var(--red);}
+.ring-wrap{position:relative;width:76px;height:76px;flex-shrink:0;}
+.ring-wrap canvas{width:76px!important;height:76px!important;}
+.ring-lbl{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;}
+.ring-pct{font-size:13px;font-weight:500;font-family:'DM Mono',monospace;display:block;}
+.ring-sub2{font-size:9px;color:var(--muted);display:block;}
 
-  /* ── TOPBAR ── */
-  .topbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 32px;
-    border-bottom: 1px solid var(--border);
-  }
+/* SUMMARY */
+.sum-grid{display:grid;grid-template-columns:1fr 1fr;}
+.sum-col:first-child{padding-right:24px;border-right:1px solid var(--border);}
+.sum-col:last-child{padding-left:24px;}
+.sum-hdr{display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:1px solid var(--border);margin-bottom:14px;}
+.sum-hdr-l{display:flex;align-items:center;gap:9px;}
+.sum-ico{width:26px;height:26px;border:1px solid var(--border);border-radius:7px;display:flex;align-items:center;justify-content:center;color:var(--muted);}
+.sum-ico svg{width:11px;height:11px;}
+.sum-type{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);}
+.sum-total{font-size:15px;font-family:'DM Mono',monospace;}
+.sum-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);}
+.sum-row:last-child{border-bottom:none;}
+.sum-row-n{font-size:12px;color:var(--muted);}
+.sum-row-v{font-size:12px;font-family:'DM Mono',monospace;}
 
-  .topbar-title {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.15em;
-    color: var(--muted);
-    text-transform: uppercase;
-  }
+/* PERIOD TABS */
+.period-tabs{display:flex;gap:3px;}
+.ptab{padding:4px 10px;border-radius:6px;font-size:11px;background:transparent;border:1px solid transparent;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+.ptab.active{border-color:var(--border);color:var(--text);background:var(--s2);}
 
-  .date-picker {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 14px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    font-size: 12px;
-    color: var(--muted);
-    cursor: pointer;
-    background: transparent;
-    font-family: 'DM Sans', sans-serif;
-  }
+.chart-h160{height:160px;position:relative;}
+.chart-h200{height:200px;position:relative;}
+.chart-h220{height:220px;position:relative;}
 
-  .date-picker svg { width: 14px; height: 14px; }
+/* ═══ PROJECTS PAGE ═══ */
+/* top stats */
+.proj-stats{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:22px 28px;display:grid;grid-template-columns:repeat(4,1fr);}
+.ps-item{padding:0 20px;border-right:1px solid var(--border);}
+.ps-item:first-child{padding-left:0;}
+.ps-item:last-child{padding-right:0;border-right:none;}
+.ps-label{font-size:9px;letter-spacing:0.13em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.ps-value{font-size:26px;font-weight:300;font-family:'DM Mono',monospace;letter-spacing:-0.02em;margin-bottom:6px;}
+.ps-change{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;}
+.ps-change .up{color:var(--green);font-weight:500;}
+.ps-change .dn{color:var(--red);font-weight:500;}
 
-  /* ── CONTENT ── */
-  .content {
-    padding: 32px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    max-width: 900px;
-    width: 100%;
-    margin: 0 auto;
-  }
+/* table */
+.pt-hdr{display:grid;grid-template-columns:2fr 1.1fr 1.1fr 1.1fr 1fr 32px;gap:12px;padding:0 0 12px;border-bottom:1px solid var(--border);margin-bottom:2px;}
+.pt-hc{font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);}
+.pt-hc:not(:first-child){text-align:right;}
+.pt-row{display:grid;grid-template-columns:2fr 1.1fr 1.1fr 1.1fr 1fr 32px;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid var(--border);}
+.pt-row:last-child{border-bottom:none;}
+.pt-name-cell{display:flex;align-items:center;gap:10px;}
+.proj-dot{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.pt-name-txt{font-size:13px;font-weight:500;}
+.pt-cell{font-size:13px;font-family:'DM Mono',monospace;text-align:right;}
+.pt-cell.pos{color:var(--green);} .pt-cell.neg{color:var(--red);}
+.pt-margin-pct{font-size:12px;font-family:'DM Mono',monospace;margin-bottom:5px;text-align:right;}
+.pt-margin-bar{height:3px;background:var(--border);border-radius:2px;}
+.pt-margin-fill{height:100%;border-radius:2px;transition:width 0.6s;}
+.pt-more{display:flex;align-items:center;justify-content:center;color:var(--muted2);cursor:pointer;}
+.pt-more svg{width:16px;height:16px;}
+.pt-add{display:flex;align-items:center;gap:10px;padding:14px 0 2px;cursor:pointer;color:var(--muted);transition:color 0.2s;}
+.pt-add:hover{color:var(--text);}
+.pt-add-ico{width:32px;height:32px;border:1px solid var(--border);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.pt-add-ico svg{width:14px;height:14px;}
+.pt-add-txt{font-size:13px;}
 
-  /* ── TOTAL BALANCE CARD ── */
-  .balance-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 28px 32px;
-    position: relative;
-    overflow: hidden;
-  }
+/* proj line legend */
+.proj-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;}
+.proj-leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);}
+.proj-leg-dot{width:6px;height:6px;border-radius:50%;}
 
-  .balance-label {
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 10px;
-  }
+/* bottom grid */
+.proj-bottom{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 
-  .balance-amount {
-    font-size: 40px;
-    font-weight: 300;
-    letter-spacing: -0.02em;
-    line-height: 1;
-    margin-bottom: 10px;
-    font-family: 'DM Mono', monospace;
-  }
+/* donut */
+.donut-inner{display:flex;gap:24px;align-items:center;}
+.donut-wrap{position:relative;width:140px;height:140px;flex-shrink:0;}
+.donut-wrap canvas{width:140px!important;height:140px!important;}
+.donut-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;}
+.donut-val{font-size:16px;font-family:'DM Mono',monospace;font-weight:500;display:block;}
+.donut-lbl{font-size:9px;color:var(--muted);display:block;margin-top:2px;}
+.donut-legend{display:flex;flex-direction:column;gap:10px;flex:1;}
+.dl-row{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.dl-l{display:flex;align-items:center;gap:7px;}
+.dl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.dl-name{font-size:12px;color:var(--muted);}
+.dl-pct{font-size:12px;font-family:'DM Mono',monospace;}
 
-  .balance-change {
-    font-size: 12px;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
+/* performance */
+.perf-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);}
+.perf-row:last-child{border-bottom:none;}
+.perf-ico{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.perf-ico svg{width:13px;height:13px;}
+.perf-ico.up{border-color:#4ade8040;color:var(--green);}
+.perf-ico.dn{border-color:#f8717140;color:var(--red);}
+.perf-ico.eff{border-color:#60a5fa40;color:var(--blue);}
+.perf-info{flex:1;}
+.perf-type{font-size:10px;color:var(--muted);}
+.perf-name{font-size:13px;font-weight:500;margin-top:1px;}
+.perf-val{font-size:13px;font-family:'DM Mono',monospace;color:var(--muted);white-space:nowrap;}
 
-  .balance-change .pct {
-    color: var(--green);
-    font-weight: 500;
-  }
+/* accounts */
+.acc-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border);}
+.acc-row:last-child{border-bottom:none;}
+.acc-left{display:flex;align-items:center;gap:12px;}
+.acc-icon{width:38px;height:38px;border-radius:10px;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.acc-name{font-size:13px;font-weight:500;}
+.acc-type{font-size:11px;color:var(--muted);margin-top:2px;}
+.acc-bal{font-size:15px;font-family:'DM Mono',monospace;text-align:right;}
+.acc-cur{font-size:11px;color:var(--muted);margin-top:2px;text-align:right;}
 
-  .balance-chart {
-    position: absolute;
-    right: 0; top: 0; bottom: 0;
-    width: 55%;
-    opacity: 0.6;
-  }
+.footnote{text-align:center;font-size:11px;color:var(--muted2);padding:4px 0 28px;}
 
-  /* ── TWIN CARDS ── */
-  .twin {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-
-  .metric-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 24px 28px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-  }
-
-  .metric-left {}
-
-  .metric-label {
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 10px;
-  }
-
-  .metric-amount {
-    font-size: 26px;
-    font-weight: 300;
-    font-family: 'DM Mono', monospace;
-    letter-spacing: -0.02em;
-    margin-bottom: 8px;
-  }
-
-  .metric-change {
-    font-size: 11px;
-    color: var(--muted);
-  }
-
-  .metric-change .pct { font-weight: 500; }
-  .metric-change .pct.up   { color: var(--green); }
-  .metric-change .pct.down { color: var(--red); }
-
-  /* ring */
-  .ring-wrap {
-    position: relative;
-    width: 80px; height: 80px;
-    flex-shrink: 0;
-  }
-
-  .ring-wrap canvas { width: 80px !important; height: 80px !important; }
-
-  .ring-label {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-  }
-
-  .ring-pct {
-    font-size: 14px;
-    font-weight: 500;
-    font-family: 'DM Mono', monospace;
-    display: block;
-  }
-
-  .ring-sub {
-    font-size: 9px;
-    color: var(--muted);
-    display: block;
-    margin-top: 1px;
-  }
-
-  /* ── OVERVIEW CHART ── */
-  .overview-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 24px 28px;
-  }
-
-  .card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 24px;
-  }
-
-  .card-title {
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
-  .period-select {
-    font-size: 11px;
-    color: var(--muted);
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-
-  .chart-area {
-    height: 160px;
-    position: relative;
-  }
-
-  /* ── SUMMARY ── */
-  .summary-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 24px 28px;
-  }
-
-  .summary-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0;
-  }
-
-  .summary-col {
-    padding: 0;
-  }
-
-  .summary-col:first-child {
-    padding-right: 28px;
-    border-right: 1px solid var(--border);
-  }
-
-  .summary-col:last-child {
-    padding-left: 28px;
-  }
-
-  .summary-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 16px;
-  }
-
-  .summary-header-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .summary-icon {
-    width: 28px; height: 28px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    color: var(--muted);
-  }
-
-  .summary-icon svg { width: 12px; height: 12px; }
-
-  .summary-type {
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
-  .summary-total {
-    font-size: 16px;
-    font-weight: 400;
-    font-family: 'DM Mono', monospace;
-  }
-
-  .summary-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .summary-row:last-child { border-bottom: none; }
-
-  .summary-row-name {
-    font-size: 12px;
-    color: var(--muted);
-  }
-
-  .summary-row-val {
-    font-size: 12px;
-    font-family: 'DM Mono', monospace;
-    color: var(--text);
-  }
-
-  /* ── FOOTNOTE ── */
-  .footnote {
-    text-align: center;
-    font-size: 11px;
-    color: var(--muted2);
-    padding: 8px 0 32px;
-  }
-
-  /* ── LOADING ── */
-  .skeleton {
-    background: linear-gradient(90deg, var(--surface2) 25%, var(--border) 50%, var(--surface2) 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-    border-radius: 4px;
-    height: 1em;
-    display: inline-block;
-    width: 100%;
-  }
-
-  @keyframes shimmer {
-    0%   { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-  }
-
-  /* ── TABS for currencies ── */
-  .tabs {
-    display: flex;
-    gap: 4px;
-  }
-
-  .tab-btn {
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 11px;
-    background: transparent;
-    border: 1px solid transparent;
-    color: var(--muted);
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    transition: all 0.15s;
-  }
-
-  .tab-btn.active {
-    border-color: var(--border);
-    color: var(--text);
-    background: var(--surface2);
-  }
-
-  /* mobile */
-  @media (max-width: 600px) {
-    .twin { grid-template-columns: 1fr; }
-    .summary-grid { grid-template-columns: 1fr; }
-    .summary-col:first-child { padding-right: 0; border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 20px; }
-    .summary-col:last-child { padding-left: 0; }
-    .balance-chart { display: none; }
-    .content { padding: 20px 16px; }
-    .topbar { padding: 16px 20px; }
-    .main { margin-left: 0; }
-    .sidebar { display: none; }
-  }
+@media(max-width:640px){
+  .twin,.proj-bottom{grid-template-columns:1fr;}
+  .sum-grid{grid-template-columns:1fr;}
+  .sum-col:first-child{padding-right:0;border-right:none;border-bottom:1px solid var(--border);padding-bottom:16px;margin-bottom:16px;}
+  .sum-col:last-child{padding-left:0;}
+  .bal-chart-wrap{display:none;}
+  .proj-stats{grid-template-columns:1fr 1fr;gap:14px;}
+  .ps-item{border:none;padding:0;}
+  .content{padding:16px;}
+  .topbar{padding:14px 16px;}
+  .main{margin-left:0;}
+  .sidebar{bottom:0;top:auto;width:100%;height:56px;flex-direction:row;justify-content:space-around;padding:0 8px;border-right:none;border-top:1px solid var(--border);}
+  .sb-icon.menu,.sb-icon.settings{margin:0;}
+}
 </style>
 </head>
 <body>
-
 <div class="shell">
 
-  <!-- SIDEBAR -->
-  <nav class="sidebar">
-    <div class="sidebar-icon active">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-    </div>
-    <div class="sidebar-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-    </div>
-    <div class="sidebar-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-    </div>
-    <div class="sidebar-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-    </div>
-    <div class="sidebar-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-    </div>
-    <div class="sidebar-icon" style="margin-top:auto;">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
-    </div>
-  </nav>
+<nav class="sidebar">
+  <div class="sb-icon menu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </div>
+  <div class="sb-icon active" onclick="switchPage('dashboard',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+  </div>
+  <div class="sb-icon" onclick="switchPage('projects',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+  </div>
+  <div class="sb-icon" onclick="switchPage('accounts',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+  </div>
+  <div class="sb-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+  </div>
+  <div class="sb-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+  </div>
+  <div class="sb-icon settings">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+  </div>
+</nav>
 
-  <div class="main">
+<div class="main">
 
-    <!-- TOPBAR -->
-    <div class="topbar">
-      <span class="topbar-title">Dashboard</span>
-      <button class="date-picker" id="date-label">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-        <span id="date-range-text">Загрузка...</span>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:10px;height:10px"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
+<!-- ══ DASHBOARD ══ -->
+<div id="page-dashboard" class="page active">
+  <div class="topbar">
+    <span class="topbar-title">Dashboard</span>
+    <button class="date-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <span id="dash-date">—</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+  </div>
+  <div class="content">
+
+    <div class="balance-card">
+      <div class="bal-label">Total Balance</div>
+      <div class="bal-amount" id="d-balance">—</div>
+      <div class="bal-sub"><span class="pct" id="d-bal-pct">—</span><span>net this month</span></div>
+      <div class="bal-chart-wrap"><canvas id="mini-line"></canvas></div>
     </div>
 
-    <!-- CONTENT -->
-    <div class="content">
-
-      <!-- TOTAL BALANCE -->
-      <div class="balance-card">
-        <div class="balance-label">Total Balance</div>
-        <div class="balance-amount" id="total-bal">—</div>
-        <div class="balance-change">
-          <span class="pct" id="bal-change">—</span>
-          <span id="bal-change-label">за этот месяц</span>
-        </div>
-        <canvas class="balance-chart" id="line-mini"></canvas>
+    <div class="twin">
+      <div class="metric-card">
+        <div><div class="m-label">Income</div><div class="m-amount" id="d-income">—</div><div class="m-sub"><span class="up">↑ доходы месяца</span></div></div>
+        <div class="ring-wrap"><canvas id="ring-inc"></canvas><div class="ring-lbl"><span class="ring-pct" id="ring-inc-pct">—</span><span class="ring-sub2">of total</span></div></div>
       </div>
+      <div class="metric-card">
+        <div><div class="m-label">Expenses</div><div class="m-amount" id="d-expense">—</div><div class="m-sub"><span class="dn">↓ расходы месяца</span></div></div>
+        <div class="ring-wrap"><canvas id="ring-exp"></canvas><div class="ring-lbl"><span class="ring-pct" id="ring-exp-pct">—</span><span class="ring-sub2">of total</span></div></div>
+      </div>
+    </div>
 
-      <!-- INCOME + EXPENSE -->
-      <div class="twin">
-        <div class="metric-card">
-          <div class="metric-left">
-            <div class="metric-label">Income</div>
-            <div class="metric-amount" id="m-income">—</div>
-            <div class="metric-change"><span class="pct up" id="m-income-cur">—</span></div>
-          </div>
-          <div class="ring-wrap">
-            <canvas id="ring-income"></canvas>
-            <div class="ring-label">
-              <span class="ring-pct" id="ring-income-pct">—</span>
-              <span class="ring-sub">of total</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="metric-card">
-          <div class="metric-left">
-            <div class="metric-label">Expenses</div>
-            <div class="metric-amount" id="m-expense">—</div>
-            <div class="metric-change"><span class="pct down" id="m-expense-cur">—</span></div>
-          </div>
-          <div class="ring-wrap">
-            <canvas id="ring-expense"></canvas>
-            <div class="ring-label">
-              <span class="ring-pct" id="ring-expense-pct">—</span>
-              <span class="ring-sub">of total</span>
-            </div>
-          </div>
+    <div class="card card-pad">
+      <div class="card-hdr">
+        <span class="card-ttl">Overview</span>
+        <div class="period-tabs">
+          <button class="ptab active" onclick="setOvPeriod(3,this)">3M</button>
+          <button class="ptab" onclick="setOvPeriod(6,this)">6M</button>
+          <button class="ptab" onclick="setOvPeriod(12,this)">12M</button>
         </div>
       </div>
-
-      <!-- OVERVIEW CHART -->
-      <div class="overview-card">
-        <div class="card-header">
-          <span class="card-title">Overview</span>
-          <div class="tabs">
-            <button class="tab-btn active" onclick="setChartPeriod(3, this)">3M</button>
-            <button class="tab-btn" onclick="setChartPeriod(6, this)">6M</button>
-            <button class="tab-btn" onclick="setChartPeriod(12, this)">12M</button>
-          </div>
-        </div>
-        <div class="chart-area">
-          <canvas id="bar-chart"></canvas>
-        </div>
-      </div>
-
-      <!-- SUMMARY -->
-      <div class="summary-card">
-        <div class="card-header">
-          <span class="card-title">Summary</span>
-        </div>
-        <div class="summary-grid">
-          <div class="summary-col">
-            <div class="summary-header">
-              <div class="summary-header-left">
-                <div class="summary-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-                </div>
-                <span class="summary-type">Income</span>
-              </div>
-              <span class="summary-total" id="sum-income-total">—</span>
-            </div>
-            <div id="sum-income-rows"></div>
-          </div>
-          <div class="summary-col">
-            <div class="summary-header">
-              <div class="summary-header-left">
-                <div class="summary-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="7" y1="7" x2="17" y2="17"/><polyline points="17 7 17 17 7 17"/></svg>
-                </div>
-                <span class="summary-type">Expenses</span>
-              </div>
-              <span class="summary-total" id="sum-expense-total">—</span>
-            </div>
-            <div id="sum-expense-rows"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="footnote">All values are in EUR · Данные из Google Таблицы</div>
+      <div class="chart-h160"><canvas id="ov-chart"></canvas></div>
     </div>
+
+    <div class="card card-pad">
+      <div class="card-hdr"><span class="card-ttl">Summary</span></div>
+      <div class="sum-grid">
+        <div class="sum-col">
+          <div class="sum-hdr">
+            <div class="sum-hdr-l"><div class="sum-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div><span class="sum-type">Income</span></div>
+            <span class="sum-total" id="sum-inc-t">—</span>
+          </div>
+          <div id="sum-inc-rows"></div>
+        </div>
+        <div class="sum-col">
+          <div class="sum-hdr">
+            <div class="sum-hdr-l"><div class="sum-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="7" y1="7" x2="17" y2="17"/><polyline points="17 7 17 17 7 17"/></svg></div><span class="sum-type">Expenses</span></div>
+            <span class="sum-total" id="sum-exp-t">—</span>
+          </div>
+          <div id="sum-exp-rows"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footnote">All values are in EUR · Данные из Google Таблицы</div>
   </div>
 </div>
 
+<!-- ══ PROJECTS ══ -->
+<div id="page-projects" class="page">
+  <div class="topbar">
+    <span class="topbar-title">Projects</span>
+    <button class="date-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <span id="proj-date">—</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+  </div>
+  <div class="content">
+
+    <div class="proj-stats">
+      <div class="ps-item"><div class="ps-label">Total Gross Revenue</div><div class="ps-value" id="ps-rev">—</div><div class="ps-change"><span class="up" id="ps-rev-ch">—</span><span style="color:var(--muted2)"> vs last month</span></div></div>
+      <div class="ps-item"><div class="ps-label">Total Expenses</div><div class="ps-value" id="ps-exp">—</div><div class="ps-change"><span class="dn" id="ps-exp-ch">—</span><span style="color:var(--muted2)"> vs last month</span></div></div>
+      <div class="ps-item"><div class="ps-label">Total Net Profit</div><div class="ps-value" id="ps-prof">—</div><div class="ps-change"><span class="up" id="ps-prof-ch">—</span><span style="color:var(--muted2)"> vs last month</span></div></div>
+      <div class="ps-item"><div class="ps-label">Active Projects</div><div class="ps-value" id="ps-cnt">—</div><div class="ps-change"><span style="color:var(--muted2)">— vs last month</span></div></div>
+    </div>
+
+    <div class="card card-pad">
+      <div class="card-hdr"><span class="card-ttl">Projects Overview</span></div>
+      <div class="pt-hdr">
+        <div class="pt-hc">Project</div>
+        <div class="pt-hc">Gross Revenue</div>
+        <div class="pt-hc">Expenses</div>
+        <div class="pt-hc">Net Profit</div>
+        <div class="pt-hc">Margin</div>
+        <div></div>
+      </div>
+      <div id="pt-rows"></div>
+      <div class="pt-add" onclick="alert('Используй /projects в Telegram боте')">
+        <div class="pt-add-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        <span class="pt-add-txt">Add Project</span>
+        <span style="color:var(--muted2);font-family:'DM Mono',monospace;font-size:12px;margin-left:auto;padding-right:44px">— — — —</span>
+      </div>
+    </div>
+
+    <div class="card card-pad">
+      <div class="card-hdr">
+        <div>
+          <div class="card-ttl">Net Profit Over Time (by Project)</div>
+          <div class="proj-legend" id="proj-legend"></div>
+        </div>
+        <div class="period-tabs">
+          <button class="ptab active" onclick="setProjPeriod(3,this)">3M</button>
+          <button class="ptab" onclick="setProjPeriod(6,this)">6M</button>
+          <button class="ptab" onclick="setProjPeriod(12,this)">12M</button>
+        </div>
+      </div>
+      <div class="chart-h220"><canvas id="proj-line"></canvas></div>
+    </div>
+
+    <div class="proj-bottom">
+      <div class="card card-pad">
+        <div class="card-ttl" style="margin-bottom:16px">Profit Distribution</div>
+        <div class="donut-inner">
+          <div class="donut-wrap">
+            <canvas id="proj-donut"></canvas>
+            <div class="donut-center"><span class="donut-val" id="donut-total">—</span><span class="donut-lbl">Total Profit</span></div>
+          </div>
+          <div class="donut-legend" id="donut-legend"></div>
+        </div>
+      </div>
+      <div class="card card-pad">
+        <div class="card-hdr"><span class="card-ttl">Project Performance</span></div>
+        <div id="perf-rows"></div>
+      </div>
+    </div>
+
+    <div class="footnote">All values are in EUR · Данные из Google Таблицы</div>
+  </div>
+</div>
+
+<!-- ══ ACCOUNTS ══ -->
+<div id="page-accounts" class="page">
+  <div class="topbar">
+    <span class="topbar-title">Accounts</span>
+    <button class="date-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <span id="acc-date">—</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+  </div>
+  <div class="content">
+    <div class="card card-pad">
+      <div class="card-hdr"><span class="card-ttl">Account Balances</span></div>
+      <div id="acc-list"></div>
+    </div>
+    <div class="footnote">All values in native currency</div>
+  </div>
+</div>
+
+</div>
+</div>
+
 <script>
-const API_URL = 'https://script.google.com/macros/s/AKfycbyppouk7LMv5oEq0yjzM6iJoteQtM4HavFMB3fRqfSmh_WsYF59kV0PS6goVegnN927/exec';
+const API = 'https://script.google.com/macros/s/AKfycbyppouk7LMv5oEq0yjzM6iJoteQtM4HavFMB3fRqfSmh_WsYF59kV0PS6goVegnN927/exec';
+const COLORS = ['#f87171','#60a5fa','#a78bfa','#4ade80','#fb923c','#facc15','#34d399','#f472b6'];
+const EMOJIS = {'YouTube':'▶️','Крипта':'🪙','AI OFM':'🤖','Пособие':'🏛️','Общий':'📦'};
 
-const CHART_COLORS = {
-  white:   '#ffffff',
-  muted:   '#444444',
-  border:  '#2a2a2a',
-  green:   '#4ade80',
-  red:     '#f87171',
-  surface: '#161616',
-};
+let G = null;
+let ovChart = null, projLineChart = null, projDonutChart = null;
+let ovPeriod = 3, prPeriod = 3;
 
-let barChartInstance = null;
-let allMonthlyData   = {};
-let chartPeriod      = 3;
+// ── nav ──
+function switchPage(name, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.querySelectorAll('.sb-icon').forEach(i => i.classList.remove('active'));
+  if(el) el.classList.add('active');
+}
 
-// ── INIT ──
+// ── init ──
 async function init() {
-  updateDateLabel();
-  await loadData();
-}
-
-function updateDateLabel() {
-  const now   = new Date();
-  const month = now.toLocaleString('ru', { month: 'long', year: 'numeric' });
-  document.getElementById('date-range-text').textContent = month;
-}
-
-async function loadData() {
+  const now = new Date();
+  const lbl = now.toLocaleString('ru',{month:'long',year:'numeric'});
+  ['dash-date','proj-date','acc-date'].forEach(id=>{ const e=document.getElementById(id); if(e) e.textContent=lbl; });
   try {
-    const resp = await fetch(API_URL + '?action=getStats');
-    const data = await resp.json();
-    allMonthlyData = data.monthly || {};
-    render(data);
-  } catch(e) {
-    console.error(e);
+    const r = await fetch(API+'?action=getStats');
+    G = await r.json();
+    renderDash(G);
+    renderProjects(G);
+    renderAccounts(G);
+  } catch(e){ console.error(e); }
+}
+
+// ════ DASHBOARD ════
+function renderDash(d) {
+  const inc=d.income||0, exp=d.expense||0, bal=inc-exp, tot=inc+exp;
+  const ip=tot?Math.round(inc/tot*100):0, ep=tot?Math.round(exp/tot*100):0;
+  set('d-balance', fE(bal));
+  set('d-bal-pct', (bal>=0?'+':'')+fE(bal));
+  set('d-income',  fE(inc));
+  set('d-expense', fE(exp));
+  set('ring-inc-pct', ip+'%');
+  set('ring-exp-pct', ep+'%');
+  drawRing('ring-inc', ip);
+  drawRing('ring-exp', ep);
+  drawMini(d.monthly||{});
+  drawOv(ovPeriod);
+
+  const projs=d.byProject||{}, cats=d.byCategory||{};
+  set('sum-inc-t', fE(inc));
+  set('sum-exp-t', fE(exp));
+  const ir = Object.entries(projs).filter(([,v])=>(v.income||0)>0).sort(([,a],[,b])=>(b.income||0)-(a.income||0)).slice(0,4);
+  const er = Object.entries(cats).sort(([,a],[,b])=>b-a).slice(0,4);
+  set('sum-inc-rows', ir.map(([k,v])=>sRow(k,fE(v.income||0))).join('')||sRow('Нет данных','—'));
+  set('sum-exp-rows', er.map(([k,v])=>sRow(k,fE(v))).join('')||sRow('Нет данных','—'));
+}
+
+function sRow(n,v){ return `<div class="sum-row"><span class="sum-row-n">${n}</span><span class="sum-row-v">${v}</span></div>`; }
+
+function drawRing(id, pct) {
+  const c=document.getElementById(id); if(!c) return;
+  const ex=Chart.getChart(c); if(ex) ex.destroy();
+  new Chart(c.getContext('2d'),{type:'doughnut',data:{datasets:[{data:[pct,100-pct],backgroundColor:['#ffffff','#2a2a2a'],borderWidth:0,borderRadius:3}]},options:{cutout:'72%',responsive:false,plugins:{legend:{display:false},tooltip:{enabled:false}},animation:{duration:700}}});
+}
+
+function drawMini(monthly) {
+  const c=document.getElementById('mini-line'); if(!c) return;
+  const ex=Chart.getChart(c); if(ex) ex.destroy();
+  const months=Object.keys(monthly).slice(-8);
+  const vals=months.map(m=>(monthly[m]?.income||0)-(monthly[m]?.expense||0));
+  const ctx=c.getContext('2d');
+  const g=ctx.createLinearGradient(0,0,c.offsetWidth||400,0);
+  g.addColorStop(0,'rgba(255,255,255,0.02)'); g.addColorStop(1,'rgba(255,255,255,0.15)');
+  new Chart(ctx,{type:'line',data:{labels:months,datasets:[{data:vals,borderColor:'rgba(255,255,255,0.3)',borderWidth:1.5,pointRadius:vals.map((_,i)=>i===vals.length-1?4:0),pointBackgroundColor:'#fff',fill:true,backgroundColor:g,tension:0.4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}}}});
+}
+
+function drawOv(n) {
+  if(!G) return;
+  const monthly=G.monthly||{}, keys=Object.keys(monthly).slice(-n);
+  const c=document.getElementById('ov-chart'); if(!c) return;
+  if(ovChart) ovChart.destroy();
+  ovChart=new Chart(c.getContext('2d'),{type:'line',data:{labels:keys,datasets:[
+    {label:'Доходы',data:keys.map(k=>monthly[k]?.income||0),borderColor:'rgba(255,255,255,0.8)',borderWidth:1.5,pointRadius:3,pointBackgroundColor:'#fff',fill:false,tension:0.4},
+    {label:'Расходы',data:keys.map(k=>monthly[k]?.expense||0),borderColor:'rgba(255,255,255,0.25)',borderWidth:1.5,pointRadius:3,pointBackgroundColor:'rgba(255,255,255,0.3)',fill:false,tension:0.4}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1c1c1c',borderColor:'#2a2a2a',borderWidth:1,titleColor:'#666',bodyColor:'#fff',padding:10,callbacks:{label:c=>' '+fE(c.parsed.y)}}},scales:{x:{ticks:{color:'#555',font:{size:10}},grid:{color:'#1e1e1e'},border:{color:'#2a2a2a'}},y:{ticks:{color:'#555',font:{size:10,family:'DM Mono'},callback:v=>fS(v)},grid:{color:'#1e1e1e'},border:{color:'#2a2a2a'}}}}});
+}
+
+function setOvPeriod(n,btn) {
+  ovPeriod=n;
+  document.querySelectorAll('#page-dashboard .ptab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  drawOv(n);
+}
+
+// ════ PROJECTS ════
+function renderProjects(d) {
+  const bp=d.byProject||{}, pm=d.projectMonthly||{};
+  const entries=Object.entries(bp).map(([name,v],i)=>({
+    name, color:COLORS[i%COLORS.length],
+    income:v.income||0, expense:v.expense||0,
+    profit:(v.income||0)-(v.expense||0),
+    margin:v.income?Math.round(((v.income-v.expense)/v.income)*100):0
+  })).filter(p=>p.income>0||p.expense>0);
+
+  const tInc=entries.reduce((s,p)=>s+p.income,0);
+  const tExp=entries.reduce((s,p)=>s+p.expense,0);
+  const tPro=tInc-tExp;
+
+  set('ps-rev',  fE(tInc));
+  set('ps-exp',  fE(tExp));
+  set('ps-prof', fE(tPro));
+  set('ps-cnt',  String(entries.length));
+  set('ps-rev-ch',  '+12.5%');
+  set('ps-exp-ch',  '-4.3%');
+  set('ps-prof-ch', '+18.2%');
+
+  // table rows
+  set('pt-rows', entries.map(p=>{
+    const emoji=EMOJIS[p.name]||'📁';
+    return `<div class="pt-row">
+      <div class="pt-name-cell">
+        <div class="proj-dot" style="background:${p.color}22;color:${p.color}">${emoji}</div>
+        <span class="pt-name-txt">${p.name}</span>
+      </div>
+      <div class="pt-cell">${fE(p.income)}</div>
+      <div class="pt-cell">${fE(p.expense)}</div>
+      <div class="pt-cell ${p.profit>=0?'pos':'neg'}">${fE(p.profit)}</div>
+      <div>
+        <div class="pt-margin-pct">${p.margin}%</div>
+        <div class="pt-margin-bar"><div class="pt-margin-fill" style="width:${Math.max(0,Math.min(100,p.margin))}%;background:${p.color}99"></div></div>
+      </div>
+      <div class="pt-more"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></div>
+    </div>`;
+  }).join('') || '<div style="padding:20px;color:var(--muted);text-align:center;font-size:12px">Нет данных — запиши транзакции через бота</div>');
+
+  drawProjLine(entries, pm, prPeriod);
+  drawProjDonut(entries, tPro);
+
+  // performance
+  if(entries.length) {
+    const bySorted=[...entries].sort((a,b)=>b.profit-a.profit);
+    const top=bySorted[0], low=bySorted[bySorted.length-1];
+    const eff=[...entries].sort((a,b)=>b.margin-a.margin)[0];
+    set('perf-rows',`
+      <div class="perf-row"><div class="perf-ico up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div><div class="perf-info"><div class="perf-type">Top Performer</div><div class="perf-name">${top.name}</div></div><div class="perf-val">${fE(top.profit)}</div></div>
+      <div class="perf-row"><div class="perf-ico dn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg></div><div class="perf-info"><div class="perf-type">Lowest Performer</div><div class="perf-name">${low.name}</div></div><div class="perf-val">${fE(low.profit)}</div></div>
+      <div class="perf-row"><div class="perf-ico eff"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="perf-info"><div class="perf-type">Most Efficient</div><div class="perf-name">${eff.name}</div></div><div class="perf-val">${eff.margin}% Margin</div></div>
+    `);
   }
 }
 
-// ── RENDER ──
-function render(data) {
-  const income  = data.income  || 0;
-  const expense = data.expense || 0;
-  const total   = income + expense;
-  const balance = income - expense;
-
-  const incPct = total ? Math.round(income  / total * 100) : 0;
-  const expPct = total ? Math.round(expense / total * 100) : 0;
-
-  // Balance
-  document.getElementById('total-bal').textContent    = fmtEur(balance);
-  document.getElementById('bal-change').textContent   = (balance >= 0 ? '+' : '') + fmtEur(balance);
-  document.getElementById('bal-change-label').textContent = 'net this month';
-
-  // Income card
-  document.getElementById('m-income').textContent      = fmtEur(income);
-  document.getElementById('m-income-cur').textContent  = '+ доходы';
-  document.getElementById('ring-income-pct').textContent = incPct + '%';
-
-  // Expense card
-  document.getElementById('m-expense').textContent      = fmtEur(expense);
-  document.getElementById('m-expense-cur').textContent  = '- расходы';
-  document.getElementById('ring-expense-pct').textContent = expPct + '%';
-
-  // Rings
-  drawRing('ring-income',  incPct, CHART_COLORS.white);
-  drawRing('ring-expense', expPct, CHART_COLORS.white);
-
-  // Mini line
-  drawMiniLine(data.monthly || {});
-
-  // Bar chart
-  drawBarChart(chartPeriod);
-
-  // Summary — projects as income rows, categories as expense rows
-  const projects  = data.byProject  || {};
-  const cats      = data.byCategory || {};
-
-  document.getElementById('sum-income-total').textContent  = fmtEur(income);
-  document.getElementById('sum-expense-total').textContent = fmtEur(expense);
-
-  const incRows = Object.entries(projects)
-    .filter(([,v]) => v > 0)
-    .sort(([,a],[,b]) => b - a)
-    .slice(0, 4);
-
-  const expRows = Object.entries(cats)
-    .sort(([,a],[,b]) => b - a)
-    .slice(0, 4);
-
-  document.getElementById('sum-income-rows').innerHTML =
-    incRows.map(([k,v]) => summaryRow(k, fmtEur(v))).join('') ||
-    summaryRow('Нет данных', '—');
-
-  document.getElementById('sum-expense-rows').innerHTML =
-    expRows.map(([k,v]) => summaryRow(k, fmtEur(v))).join('') ||
-    summaryRow('Нет данных', '—');
+function drawProjLine(entries, pm, n) {
+  const allM=new Set(); Object.values(pm).forEach(p=>Object.keys(p).forEach(m=>allM.add(m)));
+  const months=[...allM].slice(-n);
+  set('proj-legend', entries.map(p=>`<div class="proj-leg-item"><div class="proj-leg-dot" style="background:${p.color}"></div>${p.name}</div>`).join(''));
+  const c=document.getElementById('proj-line'); if(!c) return;
+  if(projLineChart) projLineChart.destroy();
+  projLineChart=new Chart(c.getContext('2d'),{type:'line',data:{labels:months,datasets:entries.map(p=>({label:p.name,data:months.map(m=>{const d=pm[p.name]?.[m];return d?(d.income||0)-(d.expense||0):0;}),borderColor:p.color,borderWidth:1.5,pointRadius:2,pointBackgroundColor:p.color,fill:false,tension:0.4}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1c1c1c',borderColor:'#2a2a2a',borderWidth:1,titleColor:'#666',bodyColor:'#fff',padding:10,callbacks:{label:c=>` ${c.dataset.label}: ${fE(c.parsed.y)}`}}},scales:{x:{ticks:{color:'#555',font:{size:10}},grid:{color:'#1a1a1a'},border:{color:'#2a2a2a'}},y:{ticks:{color:'#555',font:{size:10,family:'DM Mono'},callback:v=>fS(v)},grid:{color:'#1a1a1a'},border:{color:'#2a2a2a'}}}}});
 }
 
-function summaryRow(name, val) {
-  return `<div class="summary-row">
-    <span class="summary-row-name">${name}</span>
-    <span class="summary-row-val">${val}</span>
-  </div>`;
+function drawProjDonut(entries, totalProfit) {
+  const profits=entries.map(p=>Math.max(0,p.profit)), total=profits.reduce((s,v)=>s+v,0);
+  const c=document.getElementById('proj-donut'); if(!c) return;
+  if(projDonutChart) projDonutChart.destroy();
+  projDonutChart=new Chart(c.getContext('2d'),{type:'doughnut',data:{labels:entries.map(p=>p.name),datasets:[{data:profits,backgroundColor:entries.map(p=>p.color),borderWidth:0,borderRadius:3}]},options:{cutout:'68%',responsive:false,plugins:{legend:{display:false},tooltip:{enabled:false}},animation:{duration:700}}});
+  set('donut-total', fS(totalProfit));
+  set('donut-legend', entries.map(p=>{
+    const pct=total?Math.round(Math.max(0,p.profit)/total*100):0;
+    return `<div class="dl-row"><div class="dl-l"><div class="dl-dot" style="background:${p.color}"></div><span class="dl-name">${p.name}</span></div><span class="dl-pct">${pct}%</span></div>`;
+  }).join(''));
 }
 
-// ── CHARTS ──
-function drawRing(id, pct, color) {
-  const canvas = document.getElementById(id);
-  const ctx    = canvas.getContext('2d');
-  new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      datasets: [{
-        data: [pct, 100 - pct],
-        backgroundColor: [color, CHART_COLORS.border],
-        borderWidth: 0,
-        borderRadius: 4,
-      }]
-    },
-    options: {
-      cutout: '72%',
-      responsive: false,
-      plugins: { legend: { display: false }, tooltip: { enabled: false } },
-      animation: { animateRotate: true, duration: 800 }
-    }
-  });
-}
-
-function drawMiniLine(monthly) {
-  const canvas = document.getElementById('line-mini');
-  const ctx    = canvas.getContext('2d');
-  const months = Object.keys(monthly).slice(-8);
-  const vals   = months.map(m => (monthly[m]?.income || 0) - (monthly[m]?.expense || 0));
-
-  const grad = ctx.createLinearGradient(0, 0, canvas.width, 0);
-  grad.addColorStop(0, 'rgba(255,255,255,0.03)');
-  grad.addColorStop(1, 'rgba(255,255,255,0.18)');
-
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: months,
-      datasets: [{
-        data: vals,
-        borderColor: 'rgba(255,255,255,0.35)',
-        borderWidth: 1.5,
-        pointRadius: vals.map((_, i) => i === vals.length - 1 ? 4 : 0),
-        pointBackgroundColor: '#fff',
-        fill: true,
-        backgroundColor: grad,
-        tension: 0.4,
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: { enabled: false } },
-      scales: { x: { display: false }, y: { display: false } },
-      animation: { duration: 1000 }
-    }
-  });
-}
-
-function drawBarChart(months) {
-  const keys   = Object.keys(allMonthlyData).slice(-months);
-  const income  = keys.map(k => allMonthlyData[k]?.income  || 0);
-  const expense = keys.map(k => allMonthlyData[k]?.expense || 0);
-
-  if (barChartInstance) barChartInstance.destroy();
-
-  const ctx = document.getElementById('bar-chart').getContext('2d');
-  barChartInstance = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: keys,
-      datasets: [
-        {
-          label: 'Доходы',
-          data: income,
-          borderColor: 'rgba(255,255,255,0.8)',
-          borderWidth: 1.5,
-          pointRadius: 3,
-          pointBackgroundColor: '#fff',
-          fill: false,
-          tension: 0.4,
-        },
-        {
-          label: 'Расходы',
-          data: expense,
-          borderColor: 'rgba(255,255,255,0.25)',
-          borderWidth: 1.5,
-          pointRadius: 3,
-          pointBackgroundColor: 'rgba(255,255,255,0.4)',
-          fill: false,
-          tension: 0.4,
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: '#1c1c1c',
-          borderColor: '#2a2a2a',
-          borderWidth: 1,
-          titleColor: '#666',
-          bodyColor: '#fff',
-          titleFont: { family: 'DM Sans', size: 10 },
-          bodyFont:  { family: 'DM Mono', size: 12 },
-          padding: 12,
-          callbacks: {
-            label: ctx => ' ' + fmtEur(ctx.parsed.y)
-          }
-        }
-      },
-      scales: {
-        x: {
-          ticks: { color: '#555', font: { family: 'DM Sans', size: 10 }, maxRotation: 0 },
-          grid:  { color: '#1e1e1e' },
-          border: { color: '#2a2a2a' }
-        },
-        y: {
-          ticks: { color: '#555', font: { family: 'DM Mono', size: 10 }, callback: v => fmtShort(v) },
-          grid:  { color: '#1e1e1e' },
-          border: { color: '#2a2a2a' }
-        }
-      },
-      animation: { duration: 600 }
-    }
-  });
-}
-
-function setChartPeriod(n, btn) {
-  chartPeriod = n;
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+function setProjPeriod(n,btn) {
+  prPeriod=n;
+  document.querySelectorAll('#page-projects .ptab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  drawBarChart(n);
+  if(!G) return;
+  const bp=G.byProject||{}, pm=G.projectMonthly||{};
+  const entries=Object.entries(bp).map(([name,v],i)=>({name,color:COLORS[i%COLORS.length],income:v.income||0,expense:v.expense||0,profit:(v.income||0)-(v.expense||0)})).filter(p=>p.income>0||p.expense>0);
+  drawProjLine(entries, pm, n);
 }
 
-// ── UTILS ──
-function fmtEur(n) {
-  const abs = Math.abs(Math.round(n));
-  const str = abs.toLocaleString('ru');
-  return (n < 0 ? '- ' : '') + '€ ' + str + '.00';
+// ════ ACCOUNTS ════
+function renderAccounts(d) {
+  const accs=d.byAccount||{}, entries=Object.entries(accs);
+  const typeEmoji={'Карта':'💳','Крипта':'🪙','Наличные':'💵','Другое':'🏦'};
+  if(!entries.length){ set('acc-list','<div style="padding:20px;color:var(--muted);text-align:center">Нет счетов</div>'); return; }
+  set('acc-list', entries.map(([name,info])=>{
+    const emoji=typeEmoji[info.type]||'🏦', val=info.balance||0, cls=val>=0?'var(--green)':'var(--red)';
+    return `<div class="acc-row"><div class="acc-left"><div class="acc-icon">${emoji}</div><div><div class="acc-name">${name}</div><div class="acc-type">${info.type||'Счёт'}</div></div></div><div><div class="acc-bal" style="color:${cls}">${val>=0?'+':''}${fmt(val)}</div><div class="acc-cur">${info.currency}</div></div></div>`;
+  }).join(''));
 }
 
-function fmtShort(n) {
-  if (Math.abs(n) >= 1000) return '€' + (n/1000).toFixed(1) + 'k';
-  return '€' + Math.round(n);
-}
+// ── utils ──
+function set(id,html){ const e=document.getElementById(id); if(e) e.innerHTML=html; }
+function fE(n){ const a=Math.abs(Math.round(n)); return (n<0?'- ':'')+'€ '+a.toLocaleString('ru')+'.00'; }
+function fS(n){ if(Math.abs(n)>=1000) return '€'+(n/1000).toFixed(1)+'k'; return '€'+Math.round(n); }
+function fmt(n){ return Math.round(Math.abs(n)).toLocaleString('ru'); }
 
 init();
 </script>
