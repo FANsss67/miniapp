@@ -93,7 +93,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
 .chart-h220{height:220px;position:relative;}
 
 /* ═══ PROJECTS PAGE ═══ */
-/* top stats */
 .proj-stats{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:22px 28px;display:grid;grid-template-columns:repeat(4,1fr);}
 .ps-item{padding:0 20px;border-right:1px solid var(--border);}
 .ps-item:first-child{padding-left:0;}
@@ -104,7 +103,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
 .ps-change .up{color:var(--green);font-weight:500;}
 .ps-change .dn{color:var(--red);font-weight:500;}
 
-/* table */
 .pt-hdr{display:grid;grid-template-columns:2fr 1.1fr 1.1fr 1.1fr 1fr 32px;gap:12px;padding:0 0 12px;border-bottom:1px solid var(--border);margin-bottom:2px;}
 .pt-hc{font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);}
 .pt-hc:not(:first-child){text-align:right;}
@@ -126,15 +124,12 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
 .pt-add-ico svg{width:14px;height:14px;}
 .pt-add-txt{font-size:13px;}
 
-/* proj line legend */
 .proj-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;}
 .proj-leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);}
 .proj-leg-dot{width:6px;height:6px;border-radius:50%;}
 
-/* bottom grid */
 .proj-bottom{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 
-/* donut */
 .donut-inner{display:flex;gap:24px;align-items:center;}
 .donut-wrap{position:relative;width:140px;height:140px;flex-shrink:0;}
 .donut-wrap canvas{width:140px!important;height:140px!important;}
@@ -148,7 +143,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
 .dl-name{font-size:12px;color:var(--muted);}
 .dl-pct{font-size:12px;font-family:'DM Mono',monospace;}
 
-/* performance */
 .perf-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);}
 .perf-row:last-child{border-bottom:none;}
 .perf-ico{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
@@ -161,7 +155,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
 .perf-name{font-size:13px;font-weight:500;margin-top:1px;}
 .perf-val{font-size:13px;font-family:'DM Mono',monospace;color:var(--muted);white-space:nowrap;}
 
-/* accounts */
+/* ═══ ACCOUNTS PAGE ═══ */
 .acc-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border);}
 .acc-row:last-child{border-bottom:none;}
 .acc-left{display:flex;align-items:center;gap:12px;}
@@ -171,8 +165,62 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
 .acc-bal{font-size:15px;font-family:'DM Mono',monospace;text-align:right;}
 .acc-cur{font-size:11px;color:var(--muted);margin-top:2px;text-align:right;}
 
+/* ═══ CALENDAR PAGE ═══ */
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.cal-nav-title{font-size:16px;font-weight:500;letter-spacing:-0.01em;}
+.cal-nav-btns{display:flex;gap:4px;}
+.cal-nav-btn{width:32px;height:32px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.cal-nav-btn:hover{color:var(--text);border-color:var(--border2);}
+.cal-nav-btn svg{width:14px;height:14px;}
+.cal-grid-header{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px;}
+.cal-dow{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-align:center;padding:6px 0;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cal-day{min-height:72px;border:1px solid var(--border);border-radius:10px;padding:8px;cursor:pointer;transition:all 0.15s;position:relative;overflow:hidden;}
+.cal-day:hover{border-color:var(--border2);background:var(--s2);}
+.cal-day.other-month{opacity:0.3;}
+.cal-day.today{border-color:#333;}
+.cal-day.today .cal-day-num{color:var(--text);font-weight:500;}
+.cal-day.selected{border-color:#444;background:var(--s2);}
+.cal-day-num{font-size:12px;color:var(--muted);margin-bottom:4px;font-family:'DM Mono',monospace;}
+.cal-dot-row{display:flex;flex-wrap:wrap;gap:2px;margin-top:2px;}
+.cal-dot{width:4px;height:4px;border-radius:50%;}
+.cal-dot.income{background:var(--green);}
+.cal-dot.expense{background:var(--red);}
+.cal-day-sum{font-size:10px;font-family:'DM Mono',monospace;margin-top:4px;line-height:1.4;}
+.cal-day-sum .cal-inc{color:var(--green);}
+.cal-day-sum .cal-exp{color:var(--red);}
+
+/* Side panel for selected day */
+.cal-layout{display:grid;grid-template-columns:1fr 280px;gap:20px;align-items:start;}
+.cal-side{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:20px;position:sticky;top:80px;}
+.cal-side-date{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;}
+.cal-tx-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.cal-tx-row:last-child{border-bottom:none;}
+.cal-tx-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.cal-tx-dot.income{background:var(--green);}
+.cal-tx-dot.expense{background:var(--red);}
+.cal-tx-info{flex:1;min-width:0;}
+.cal-tx-name{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.cal-tx-cat{font-size:10px;color:var(--muted);margin-top:1px;}
+.cal-tx-amt{font-size:13px;font-family:'DM Mono',monospace;flex-shrink:0;}
+.cal-tx-amt.inc{color:var(--green);}
+.cal-tx-amt.exp{color:var(--red);}
+.cal-no-tx{font-size:12px;color:var(--muted);text-align:center;padding:24px 0;}
+
+/* Month summary strip */
+.cal-month-strip{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px;}
+.cal-strip-item{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
+.cal-strip-label{font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.cal-strip-val{font-size:20px;font-weight:300;font-family:'DM Mono',monospace;letter-spacing:-0.01em;}
+.cal-strip-val.inc{color:var(--green);}
+.cal-strip-val.exp{color:var(--red);}
+
 .footnote{text-align:center;font-size:11px;color:var(--muted2);padding:4px 0 28px;}
 
+@media(max-width:780px){
+  .cal-layout{grid-template-columns:1fr;}
+  .cal-side{position:static;}
+}
 @media(max-width:640px){
   .twin,.proj-bottom{grid-template-columns:1fr;}
   .sum-grid{grid-template-columns:1fr;}
@@ -181,6 +229,9 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
   .bal-chart-wrap{display:none;}
   .proj-stats{grid-template-columns:1fr 1fr;gap:14px;}
   .ps-item{border:none;padding:0;}
+  .cal-month-strip{grid-template-columns:1fr 1fr;}
+  .cal-day{min-height:54px;padding:6px;}
+  .cal-day-sum{display:none;}
   .content{padding:16px;}
   .topbar{padding:14px 16px;}
   .main{margin-left:0;}
@@ -196,20 +247,17 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
   <div class="sb-icon menu">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
   </div>
-  <div class="sb-icon active" onclick="switchPage('dashboard',this)">
+  <div class="sb-icon active" onclick="switchPage('dashboard',this)" title="Dashboard">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
   </div>
-  <div class="sb-icon" onclick="switchPage('projects',this)">
+  <div class="sb-icon" onclick="switchPage('projects',this)" title="Projects">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
   </div>
-  <div class="sb-icon" onclick="switchPage('accounts',this)">
+  <div class="sb-icon" onclick="switchPage('accounts',this)" title="Accounts">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
   </div>
-  <div class="sb-icon">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-  </div>
-  <div class="sb-icon">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+  <div class="sb-icon" onclick="switchPage('calendar',this)" title="Calendar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
   </div>
   <div class="sb-icon settings">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
@@ -229,14 +277,12 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
     </button>
   </div>
   <div class="content">
-
     <div class="balance-card">
       <div class="bal-label">Total Balance</div>
       <div class="bal-amount" id="d-balance">—</div>
       <div class="bal-sub"><span class="pct" id="d-bal-pct">—</span><span>net this month</span></div>
       <div class="bal-chart-wrap"><canvas id="mini-line"></canvas></div>
     </div>
-
     <div class="twin">
       <div class="metric-card">
         <div><div class="m-label">Income</div><div class="m-amount" id="d-income">—</div><div class="m-sub"><span class="up">↑ доходы месяца</span></div></div>
@@ -247,7 +293,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
         <div class="ring-wrap"><canvas id="ring-exp"></canvas><div class="ring-lbl"><span class="ring-pct" id="ring-exp-pct">—</span><span class="ring-sub2">of total</span></div></div>
       </div>
     </div>
-
     <div class="card card-pad">
       <div class="card-hdr">
         <span class="card-ttl">Overview</span>
@@ -259,7 +304,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
       </div>
       <div class="chart-h160"><canvas id="ov-chart"></canvas></div>
     </div>
-
     <div class="card card-pad">
       <div class="card-hdr"><span class="card-ttl">Summary</span></div>
       <div class="sum-grid">
@@ -279,7 +323,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
         </div>
       </div>
     </div>
-
     <div class="footnote">All values are in EUR · Данные из Google Таблицы</div>
   </div>
 </div>
@@ -295,14 +338,12 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
     </button>
   </div>
   <div class="content">
-
     <div class="proj-stats">
       <div class="ps-item"><div class="ps-label">Total Gross Revenue</div><div class="ps-value" id="ps-rev">—</div><div class="ps-change"><span class="up" id="ps-rev-ch">—</span><span style="color:var(--muted2)"> vs last month</span></div></div>
       <div class="ps-item"><div class="ps-label">Total Expenses</div><div class="ps-value" id="ps-exp">—</div><div class="ps-change"><span class="dn" id="ps-exp-ch">—</span><span style="color:var(--muted2)"> vs last month</span></div></div>
       <div class="ps-item"><div class="ps-label">Total Net Profit</div><div class="ps-value" id="ps-prof">—</div><div class="ps-change"><span class="up" id="ps-prof-ch">—</span><span style="color:var(--muted2)"> vs last month</span></div></div>
       <div class="ps-item"><div class="ps-label">Active Projects</div><div class="ps-value" id="ps-cnt">—</div><div class="ps-change"><span style="color:var(--muted2)">— vs last month</span></div></div>
     </div>
-
     <div class="card card-pad">
       <div class="card-hdr"><span class="card-ttl">Projects Overview</span></div>
       <div class="pt-hdr">
@@ -320,7 +361,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
         <span style="color:var(--muted2);font-family:'DM Mono',monospace;font-size:12px;margin-left:auto;padding-right:44px">— — — —</span>
       </div>
     </div>
-
     <div class="card card-pad">
       <div class="card-hdr">
         <div>
@@ -335,7 +375,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
       </div>
       <div class="chart-h220"><canvas id="proj-line"></canvas></div>
     </div>
-
     <div class="proj-bottom">
       <div class="card card-pad">
         <div class="card-ttl" style="margin-bottom:16px">Profit Distribution</div>
@@ -352,7 +391,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
         <div id="perf-rows"></div>
       </div>
     </div>
-
     <div class="footnote">All values are in EUR · Данные из Google Таблицы</div>
   </div>
 </div>
@@ -376,11 +414,76 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
   </div>
 </div>
 
+<!-- ══ CALENDAR ══ -->
+<div id="page-calendar" class="page">
+  <div class="topbar">
+    <span class="topbar-title">Calendar</span>
+    <button class="date-btn" onclick="calGoToday()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <span>Сегодня</span>
+    </button>
+  </div>
+  <div class="content" style="max-width:1100px;">
+    <!-- Month stats strip -->
+    <div class="cal-month-strip">
+      <div class="cal-strip-item">
+        <div class="cal-strip-label">Доходы месяца</div>
+        <div class="cal-strip-val inc" id="cal-inc-total">—</div>
+      </div>
+      <div class="cal-strip-item">
+        <div class="cal-strip-label">Расходы месяца</div>
+        <div class="cal-strip-val exp" id="cal-exp-total">—</div>
+      </div>
+      <div class="cal-strip-item">
+        <div class="cal-strip-label">Итого</div>
+        <div class="cal-strip-val" id="cal-net-total">—</div>
+      </div>
+    </div>
+
+    <div class="cal-layout">
+      <!-- Calendar grid -->
+      <div class="card card-pad">
+        <div class="cal-nav">
+          <div class="cal-nav-title" id="cal-month-label">—</div>
+          <div class="cal-nav-btns">
+            <button class="cal-nav-btn" onclick="calPrev()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <button class="cal-nav-btn" onclick="calNext()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="cal-grid-header">
+          <div class="cal-dow">Пн</div>
+          <div class="cal-dow">Вт</div>
+          <div class="cal-dow">Ср</div>
+          <div class="cal-dow">Чт</div>
+          <div class="cal-dow">Пт</div>
+          <div class="cal-dow">Сб</div>
+          <div class="cal-dow">Вс</div>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+      </div>
+
+      <!-- Day detail panel -->
+      <div class="cal-side">
+        <div class="cal-side-date" id="cal-side-date">Выбери день</div>
+        <div id="cal-side-txs"><div class="cal-no-tx">Нажми на день чтобы увидеть транзакции</div></div>
+      </div>
+    </div>
+
+    <div class="footnote">Данные из Google Таблицы · Нажми на день чтобы увидеть транзакции</div>
+  </div>
+</div>
+
 </div>
 </div>
 
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbyppouk7LMv5oEq0yjzM6iJoteQtM4HavFMB3fRqfSmh_WsYF59kV0PS6goVegnN927/exec';
+// Список настоящих проектов — только они показываются на странице Projects
+const REAL_PROJECTS = ['YouTube', 'Крипта', 'AI OFM', 'Пособие', 'Общий'];
 const COLORS = ['#f87171','#60a5fa','#a78bfa','#4ade80','#fb923c','#facc15','#34d399','#f472b6'];
 const EMOJIS = {'YouTube':'▶️','Крипта':'🪙','AI OFM':'🤖','Пособие':'🏛️','Общий':'📦'};
 
@@ -388,12 +491,20 @@ let G = null;
 let ovChart = null, projLineChart = null, projDonutChart = null;
 let ovPeriod = 3, prPeriod = 3;
 
+// Calendar state
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth(); // 0-indexed
+let calSelected = null;
+// Map: "YYYY-MM-DD" → [{type, amount, currency, description, category, project}]
+let calTxMap = {};
+
 // ── nav ──
 function switchPage(name, el) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
   document.querySelectorAll('.sb-icon').forEach(i => i.classList.remove('active'));
   if(el) el.classList.add('active');
+  if(name === 'calendar' && G) buildCalendar();
 }
 
 // ── init ──
@@ -407,6 +518,8 @@ async function init() {
     renderDash(G);
     renderProjects(G);
     renderAccounts(G);
+    buildCalTxMap(G);
+    buildCalendar();
   } catch(e){ console.error(e); }
 }
 
@@ -428,7 +541,12 @@ function renderDash(d) {
   const projs=d.byProject||{}, cats=d.byCategory||{};
   set('sum-inc-t', fE(inc));
   set('sum-exp-t', fE(exp));
-  const ir = Object.entries(projs).filter(([,v])=>(v.income||0)>0).sort(([,a],[,b])=>(b.income||0)-(a.income||0)).slice(0,4);
+  // Income rows: only real projects
+  const ir = REAL_PROJECTS
+    .filter(p => projs[p] && (projs[p].income||0) > 0)
+    .map(p => [p, projs[p]])
+    .sort(([,a],[,b])=>(b.income||0)-(a.income||0))
+    .slice(0,4);
   const er = Object.entries(cats).sort(([,a],[,b])=>b-a).slice(0,4);
   set('sum-inc-rows', ir.map(([k,v])=>sRow(k,fE(v.income||0))).join('')||sRow('Нет данных','—'));
   set('sum-exp-rows', er.map(([k,v])=>sRow(k,fE(v))).join('')||sRow('Нет данных','—'));
@@ -472,14 +590,24 @@ function setOvPeriod(n,btn) {
 }
 
 // ════ PROJECTS ════
+// Ключевое исправление: фильтруем только реальные проекты из списка REAL_PROJECTS
+function getProjectEntries(bp) {
+  return REAL_PROJECTS
+    .filter(name => bp[name])
+    .map((name, i) => ({
+      name,
+      color: COLORS[i % COLORS.length],
+      income: bp[name].income || 0,
+      expense: bp[name].expense || 0,
+      profit: (bp[name].income || 0) - (bp[name].expense || 0),
+      margin: bp[name].income ? Math.round(((bp[name].income - bp[name].expense) / bp[name].income) * 100) : 0
+    }))
+    .filter(p => p.income > 0 || p.expense > 0);
+}
+
 function renderProjects(d) {
   const bp=d.byProject||{}, pm=d.projectMonthly||{};
-  const entries=Object.entries(bp).map(([name,v],i)=>({
-    name, color:COLORS[i%COLORS.length],
-    income:v.income||0, expense:v.expense||0,
-    profit:(v.income||0)-(v.expense||0),
-    margin:v.income?Math.round(((v.income-v.expense)/v.income)*100):0
-  })).filter(p=>p.income>0||p.expense>0);
+  const entries = getProjectEntries(bp);
 
   const tInc=entries.reduce((s,p)=>s+p.income,0);
   const tExp=entries.reduce((s,p)=>s+p.expense,0);
@@ -493,7 +621,6 @@ function renderProjects(d) {
   set('ps-exp-ch',  '-4.3%');
   set('ps-prof-ch', '+18.2%');
 
-  // table rows
   set('pt-rows', entries.map(p=>{
     const emoji=EMOJIS[p.name]||'📁';
     return `<div class="pt-row">
@@ -515,7 +642,6 @@ function renderProjects(d) {
   drawProjLine(entries, pm, prPeriod);
   drawProjDonut(entries, tPro);
 
-  // performance
   if(entries.length) {
     const bySorted=[...entries].sort((a,b)=>b.profit-a.profit);
     const top=bySorted[0], low=bySorted[bySorted.length-1];
@@ -555,7 +681,7 @@ function setProjPeriod(n,btn) {
   btn.classList.add('active');
   if(!G) return;
   const bp=G.byProject||{}, pm=G.projectMonthly||{};
-  const entries=Object.entries(bp).map(([name,v],i)=>({name,color:COLORS[i%COLORS.length],income:v.income||0,expense:v.expense||0,profit:(v.income||0)-(v.expense||0)})).filter(p=>p.income>0||p.expense>0);
+  const entries = getProjectEntries(bp);
   drawProjLine(entries, pm, n);
 }
 
@@ -568,6 +694,185 @@ function renderAccounts(d) {
     const emoji=typeEmoji[info.type]||'🏦', val=info.balance||0, cls=val>=0?'var(--green)':'var(--red)';
     return `<div class="acc-row"><div class="acc-left"><div class="acc-icon">${emoji}</div><div><div class="acc-name">${name}</div><div class="acc-type">${info.type||'Счёт'}</div></div></div><div><div class="acc-bal" style="color:${cls}">${val>=0?'+':''}${fmt(val)}</div><div class="acc-cur">${info.currency}</div></div></div>`;
   }).join(''));
+}
+
+// ════ CALENDAR ════
+
+// Строим карту транзакций по дням из данных G
+// G.monthly содержит агрегаты — нам нужны raw транзакции
+// Поскольку getStats не возвращает raw list, делаем отдельный запрос
+let calRawLoaded = false;
+let calRaw = []; // [{date, amount, currency, type, project, category, account, description}]
+
+async function loadCalRaw() {
+  if(calRawLoaded) return;
+  try {
+    const r = await fetch(API+'?action=getTransactions');
+    const d = await r.json();
+    if(d && d.transactions) {
+      calRaw = d.transactions;
+    }
+    calRawLoaded = true;
+  } catch(e) {
+    // Если getTransactions не реализован — строим из monthly приближённо
+    calRawLoaded = true;
+  }
+}
+
+// Строим calTxMap из byProject/byCategory агрегатов
+// Поскольку у нас нет raw транзакций через API, используем monthly для отображения в календаре
+// При наличии getTransactions — перестраиваем
+function buildCalTxMap(d) {
+  calTxMap = {};
+  // Если raw данные загружены — используем их
+  if(calRaw.length > 0) {
+    for(const tx of calRaw) {
+      if(!tx.date) continue;
+      const dt = new Date(tx.date);
+      if(isNaN(dt)) continue;
+      const key = dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');
+      if(!calTxMap[key]) calTxMap[key] = [];
+      calTxMap[key].push(tx);
+    }
+  }
+}
+
+function buildCalendar() {
+  const now = new Date();
+  const months_ru = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+  set('cal-month-label', months_ru[calMonth]+' '+calYear);
+
+  // Month stats from G.monthly
+  const monthly = G ? (G.monthly||{}) : {};
+  // Find matching key
+  const testDate = new Date(calYear, calMonth, 15);
+  const monthKey = testDate.toLocaleString('ru', {month:'short', year:'2-digit'});
+  const mData = monthly[monthKey] || {income:0,expense:0};
+  const net = (mData.income||0)-(mData.expense||0);
+  set('cal-inc-total', '+ '+fE(mData.income||0));
+  set('cal-exp-total', '- '+fE(mData.expense||0));
+  const netEl = document.getElementById('cal-net-total');
+  if(netEl) { netEl.textContent = (net>=0?'+':'')+fE(net); netEl.style.color = net>=0?'var(--green)':'var(--red)'; }
+
+  // Build grid
+  const firstDay = new Date(calYear, calMonth, 1);
+  let startDow = firstDay.getDay(); // 0=Sun
+  // Convert to Mon-start: Mon=0..Sun=6
+  startDow = (startDow + 6) % 7;
+  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+  const daysInPrev = new Date(calYear, calMonth, 0).getDate();
+
+  const cells = [];
+  // Previous month filler
+  for(let i=startDow-1; i>=0; i--) cells.push({day:daysInPrev-i, month:'prev'});
+  // Current month
+  for(let d=1; d<=daysInMonth; d++) cells.push({day:d, month:'cur'});
+  // Next month filler
+  const rem = (7 - (cells.length%7)) % 7;
+  for(let d=1; d<=rem; d++) cells.push({day:d, month:'next'});
+
+  const todayStr = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+
+  const grid = document.getElementById('cal-grid');
+  if(!grid) return;
+  grid.innerHTML = '';
+
+  cells.forEach(cell => {
+    const div = document.createElement('div');
+    div.className = 'cal-day';
+    if(cell.month !== 'cur') div.classList.add('other-month');
+
+    let dateStr = null;
+    if(cell.month === 'cur') {
+      dateStr = calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(cell.day).padStart(2,'0');
+      if(dateStr === todayStr) div.classList.add('today');
+      if(calSelected === dateStr) div.classList.add('selected');
+    }
+
+    // Day number
+    const numEl = document.createElement('div');
+    numEl.className = 'cal-day-num';
+    numEl.textContent = cell.day;
+    div.appendChild(numEl);
+
+    // Dots and sums for days with transactions
+    if(dateStr && calTxMap[dateStr] && calTxMap[dateStr].length > 0) {
+      const txs = calTxMap[dateStr];
+      const incAmt = txs.filter(t=>t.type==='Доход').reduce((s,t)=>s+(t.amount||0),0);
+      const expAmt = txs.filter(t=>t.type==='Расход').reduce((s,t)=>s+(t.amount||0),0);
+
+      const dotRow = document.createElement('div');
+      dotRow.className = 'cal-dot-row';
+      if(incAmt > 0) { const d=document.createElement('div'); d.className='cal-dot income'; dotRow.appendChild(d); }
+      if(expAmt > 0) { const d=document.createElement('div'); d.className='cal-dot expense'; dotRow.appendChild(d); }
+      div.appendChild(dotRow);
+
+      const sumEl = document.createElement('div');
+      sumEl.className = 'cal-day-sum';
+      if(incAmt>0) sumEl.innerHTML += `<div class="cal-inc">+${fS(incAmt)}</div>`;
+      if(expAmt>0) sumEl.innerHTML += `<div class="cal-exp">-${fS(expAmt)}</div>`;
+      div.appendChild(sumEl);
+    }
+
+    if(cell.month === 'cur' && dateStr) {
+      div.style.cursor = 'pointer';
+      div.onclick = () => calSelectDay(dateStr, cell.day);
+    }
+
+    grid.appendChild(div);
+  });
+}
+
+function calSelectDay(dateStr, dayNum) {
+  calSelected = dateStr;
+  // Re-highlight selected
+  document.querySelectorAll('.cal-day').forEach(d => d.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+
+  const months_ru = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+  set('cal-side-date', dayNum+' '+months_ru[calMonth]+' '+calYear);
+
+  const txs = calTxMap[dateStr] || [];
+  if(!txs.length) {
+    set('cal-side-txs', '<div class="cal-no-tx">Нет транзакций</div>');
+    return;
+  }
+
+  const rows = txs.map(tx => {
+    const isInc = tx.type === 'Доход';
+    const symb = {UAH:'₴',EUR:'€',USD:'$',USDT:'USDT',ETH:'ETH'}[tx.currency] || tx.currency;
+    return `<div class="cal-tx-row">
+      <div class="cal-tx-dot ${isInc?'income':'expense'}"></div>
+      <div class="cal-tx-info">
+        <div class="cal-tx-name">${tx.description||tx.category||tx.project||'—'}</div>
+        <div class="cal-tx-cat">${tx.category||tx.project||''}</div>
+      </div>
+      <div class="cal-tx-amt ${isInc?'inc':'exp'}">${isInc?'+':'-'}${fmt(tx.amount||0)} ${symb}</div>
+    </div>`;
+  }).join('');
+  set('cal-side-txs', rows);
+}
+
+function calPrev() {
+  calMonth--;
+  if(calMonth < 0) { calMonth = 11; calYear--; }
+  calSelected = null;
+  buildCalendar();
+}
+
+function calNext() {
+  calMonth++;
+  if(calMonth > 11) { calMonth = 0; calYear++; }
+  calSelected = null;
+  buildCalendar();
+}
+
+function calGoToday() {
+  const now = new Date();
+  calYear = now.getFullYear();
+  calMonth = now.getMonth();
+  calSelected = null;
+  buildCalendar();
 }
 
 // ── utils ──
