@@ -270,11 +270,14 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
 <div id="page-dashboard" class="page active">
   <div class="topbar">
     <span class="topbar-title">Dashboard</span>
-    <button class="date-btn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      <span id="dash-date">—</span>
-      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 12 15 18 9"/></svg>
-    </button>
+    <div style="display:flex;align-items:center;gap:4px;">
+      <button class="cal-nav-btn" onclick="topbarPrev('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <div class="date-btn" style="cursor:default;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span id="dash-date">—</span>
+      </div>
+      <button class="cal-nav-btn" onclick="topbarNext('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg></button>
+    </div>
   </div>
   <div class="content">
     <div class="balance-card">
@@ -331,11 +334,14 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
 <div id="page-projects" class="page">
   <div class="topbar">
     <span class="topbar-title">Projects</span>
-    <button class="date-btn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      <span id="proj-date">—</span>
-      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 12 15 18 9"/></svg>
-    </button>
+    <div style="display:flex;align-items:center;gap:4px;">
+      <button class="cal-nav-btn" onclick="topbarPrev('projects')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <div class="date-btn" style="cursor:default;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span id="proj-date">—</span>
+      </div>
+      <button class="cal-nav-btn" onclick="topbarNext('projects')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg></button>
+    </div>
   </div>
   <div class="content">
     <div class="proj-stats">
@@ -482,52 +488,134 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
 
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbyppouk7LMv5oEq0yjzM6iJoteQtM4HavFMB3fRqfSmh_WsYF59kV0PS6goVegnN927/exec';
-// Список настоящих проектов — только они показываются на странице Projects
-// Список проектов берётся из API (G.projectList), этот массив — фолбэк если API не вернул
 const REAL_PROJECTS_FALLBACK = ['YouTube', 'Крипта', 'AI OFM', 'Общий'];
 const COLORS = ['#f87171','#60a5fa','#a78bfa','#4ade80','#fb923c','#facc15','#34d399','#f472b6'];
-const EMOJIS = {'YouTube':'▶️','Крипта':'🪙','AI OFM':'🤖','Пособие':'🏛️','Общий':'📦'};
+const EMOJIS = {'YouTube':'▶️','Крипта':'🪙','AI OFM':'🤖','Общий':'📦'};
 
 let G = null;
+let allTx = []; // все транзакции из getTransactions
+let calTxMap = {}; // "YYYY-MM-DD" → [tx,...]
 let ovChart = null, projLineChart = null, projDonutChart = null;
 let ovPeriod = 3, prPeriod = 3;
 
-// Calendar state
-let calYear = new Date().getFullYear();
-let calMonth = new Date().getMonth(); // 0-indexed
-let calSelected = null;
-// Map: "YYYY-MM-DD" → [{type, amount, currency, description, category, project}]
-let calTxMap = {};
+// ── Текущий выбранный месяц для Dashboard/Projects/Accounts топбара ──
+let selYear  = new Date().getFullYear();
+let selMonth = new Date().getMonth(); // 0-indexed
 
-// ── nav ──
+// ── Календарь ──
+let calYear  = new Date().getFullYear();
+let calMonth = new Date().getMonth();
+let calSelected = null;
+
+// ════ NAV ════
 function switchPage(name, el) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
   document.querySelectorAll('.sb-icon').forEach(i => i.classList.remove('active'));
   if(el) el.classList.add('active');
-  if(name === 'calendar' && G) buildCalendar();
+  if(name === 'calendar') buildCalendar();
 }
 
-// ── init ──
+// ════ INIT ════
 async function init() {
-  const now = new Date();
-  const lbl = now.toLocaleString('ru',{month:'long',year:'numeric'});
-  ['dash-date','proj-date','acc-date'].forEach(id=>{ const e=document.getElementById(id); if(e) e.textContent=lbl; });
+  updateTopbarLabel();
   try {
-    const r = await fetch(API+'?action=getStats');
-    G = await r.json();
-    renderDash(G);
-    renderProjects(G);
-    renderAccounts(G);
-    buildCalTxMap(G);
+    // Загружаем stats и transactions параллельно
+    const [rStats, rTx] = await Promise.all([
+      fetch(API+'?action=getStats'),
+      fetch(API+'?action=getTransactions')
+    ]);
+    G = await rStats.json();
+    const txData = await rTx.json();
+    if(txData && txData.transactions) {
+      allTx = txData.transactions;
+      buildCalTxMap();
+    }
+    renderDash();
+    renderProjects();
+    renderAccounts();
     buildCalendar();
-  } catch(e){ console.error(e); }
+  } catch(e){ console.error('Init error:', e); }
+}
+
+// ════ TOPBAR — переключение месяца ════
+function updateTopbarLabel() {
+  const d = new Date(selYear, selMonth, 1);
+  const lbl = d.toLocaleString('ru', {month:'long', year:'numeric'});
+  ['dash-date','proj-date','acc-date'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.textContent = lbl;
+  });
+}
+
+function topbarPrev(page) {
+  selMonth--;
+  if(selMonth < 0) { selMonth = 11; selYear--; }
+  updateTopbarLabel();
+  if(page === 'dashboard') renderDash();
+  if(page === 'projects')  renderProjects();
+  if(page === 'accounts')  renderAccounts();
+}
+
+function topbarNext(page) {
+  selMonth++;
+  if(selMonth > 11) { selMonth = 0; selYear++; }
+  updateTopbarLabel();
+  if(page === 'dashboard') renderDash();
+  if(page === 'projects')  renderProjects();
+  if(page === 'accounts')  renderAccounts();
+}
+
+// Считаем stats за выбранный месяц из allTx
+function getStatsForMonth(year, month) {
+  const firstDay = new Date(year, month, 1);
+  const lastDay  = new Date(year, month+1, 0, 23, 59, 59);
+  let income = 0, expense = 0;
+  const byProject  = {};
+  const byCategory = {};
+
+  for(const tx of allTx) {
+    if(!tx.date) continue;
+    const dt = new Date(tx.date);
+    if(dt < firstDay || dt > lastDay) continue;
+    if(tx.type === 'Перевод') continue;
+    if(tx.currency !== 'EUR' && tx.currency !== 'UAH') continue;
+    if(tx.type === 'Доход') {
+      income += tx.amount;
+      if(!byProject[tx.project]) byProject[tx.project] = {income:0,expense:0};
+      byProject[tx.project].income += tx.amount;
+    }
+    if(tx.type === 'Расход') {
+      expense += tx.amount;
+      if(!byProject[tx.project]) byProject[tx.project] = {income:0,expense:0};
+      byProject[tx.project].expense += tx.amount;
+      const cat = tx.category || 'Прочее';
+      byCategory[cat] = (byCategory[cat]||0) + tx.amount;
+    }
+  }
+  return { income, expense, byProject, byCategory };
 }
 
 // ════ DASHBOARD ════
-function renderDash(d) {
-  const inc=d.income||0, exp=d.expense||0, bal=inc-exp, tot=inc+exp;
-  const ip=tot?Math.round(inc/tot*100):0, ep=tot?Math.round(exp/tot*100):0;
+function renderDash() {
+  if(!G) return;
+
+  // Если выбранный месяц = текущий — берём из G (он уже посчитан)
+  const now = new Date();
+  let inc, exp, byProject, byCategory;
+  if(selYear === now.getFullYear() && selMonth === now.getMonth()) {
+    inc = G.income||0; exp = G.expense||0;
+    byProject = G.byProject||{}; byCategory = G.byCategory||{};
+  } else {
+    const s = getStatsForMonth(selYear, selMonth);
+    inc = s.income; exp = s.expense;
+    byProject = s.byProject; byCategory = s.byCategory;
+  }
+
+  const bal = inc-exp, tot = inc+exp;
+  const ip = tot ? Math.round(inc/tot*100) : 0;
+  const ep = tot ? Math.round(exp/tot*100) : 0;
+
   set('d-balance', fE(bal));
   set('d-bal-pct', (bal>=0?'+':'')+fE(bal));
   set('d-income',  fE(inc));
@@ -536,19 +624,19 @@ function renderDash(d) {
   set('ring-exp-pct', ep+'%');
   drawRing('ring-inc', ip);
   drawRing('ring-exp', ep);
-  drawMini(d.monthly||{});
+  drawMini(G.monthly||{});
   drawOv(ovPeriod);
 
-  const projs=d.byProject||{}, cats=d.byCategory||{};
   set('sum-inc-t', fE(inc));
   set('sum-exp-t', fE(exp));
-  // Income rows: only real projects
-  const ir = getRealProjects()
-    .filter(p => projs[p] && (projs[p].income||0) > 0)
-    .map(p => [p, projs[p]])
-    .sort(([,a],[,b])=>(b.income||0)-(a.income||0))
+
+  const projs = getRealProjects();
+  const ir = projs
+    .filter(p => byProject[p] && (byProject[p].income||0) > 0)
+    .map(p => [p, byProject[p]])
+    .sort(([,a],[,b]) => (b.income||0)-(a.income||0))
     .slice(0,4);
-  const er = Object.entries(cats).sort(([,a],[,b])=>b-a).slice(0,4);
+  const er = Object.entries(byCategory).sort(([,a],[,b])=>b-a).slice(0,4);
   set('sum-inc-rows', ir.map(([k,v])=>sRow(k,fE(v.income||0))).join('')||sRow('Нет данных','—'));
   set('sum-exp-rows', er.map(([k,v])=>sRow(k,fE(v))).join('')||sRow('Нет данных','—'));
 }
@@ -567,7 +655,7 @@ function drawMini(monthly) {
   const months=Object.keys(monthly).slice(-8);
   const vals=months.map(m=>(monthly[m]?.income||0)-(monthly[m]?.expense||0));
   const ctx=c.getContext('2d');
-  const g=ctx.createLinearGradient(0,0,c.offsetWidth||400,0);
+  const g=ctx.createLinearGradient(0,0,400,0);
   g.addColorStop(0,'rgba(255,255,255,0.02)'); g.addColorStop(1,'rgba(255,255,255,0.15)');
   new Chart(ctx,{type:'line',data:{labels:months,datasets:[{data:vals,borderColor:'rgba(255,255,255,0.3)',borderWidth:1.5,pointRadius:vals.map((_,i)=>i===vals.length-1?4:0),pointBackgroundColor:'#fff',fill:true,backgroundColor:g,tension:0.4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}}}});
 }
@@ -594,35 +682,40 @@ function setOvPeriod(n,btn) {
 function getRealProjects() {
   return (G && G.projectList && G.projectList.length) ? G.projectList : REAL_PROJECTS_FALLBACK;
 }
-function getProjectEntries(bp) {
+
+function getProjectEntries(byProject) {
   return getRealProjects()
-    .filter(name => bp[name])
+    .filter(name => byProject[name])
     .map((name, i) => ({
-      name,
-      color: COLORS[i % COLORS.length],
-      income: bp[name].income || 0,
-      expense: bp[name].expense || 0,
-      profit: (bp[name].income || 0) - (bp[name].expense || 0),
-      margin: bp[name].income ? Math.round(((bp[name].income - bp[name].expense) / bp[name].income) * 100) : 0
+      name, color: COLORS[i % COLORS.length],
+      income:  byProject[name].income  || 0,
+      expense: byProject[name].expense || 0,
+      profit:  (byProject[name].income||0) - (byProject[name].expense||0),
+      margin:  byProject[name].income ? Math.round(((byProject[name].income - byProject[name].expense) / byProject[name].income)*100) : 0
     }))
     .filter(p => p.income > 0 || p.expense > 0);
 }
 
-function renderProjects(d) {
-  const bp=d.byProject||{}, pm=d.projectMonthly||{};
+function renderProjects() {
+  if(!G) return;
+  const now = new Date();
+  let bp, pm;
+  if(selYear === now.getFullYear() && selMonth === now.getMonth()) {
+    bp = G.byProject||{}; pm = G.projectMonthly||{};
+  } else {
+    const s = getStatsForMonth(selYear, selMonth);
+    bp = s.byProject; pm = G.projectMonthly||{};
+  }
   const entries = getProjectEntries(bp);
-
-  const tInc=entries.reduce((s,p)=>s+p.income,0);
-  const tExp=entries.reduce((s,p)=>s+p.expense,0);
-  const tPro=tInc-tExp;
+  const tInc = entries.reduce((s,p)=>s+p.income,0);
+  const tExp = entries.reduce((s,p)=>s+p.expense,0);
+  const tPro = tInc-tExp;
 
   set('ps-rev',  fE(tInc));
   set('ps-exp',  fE(tExp));
   set('ps-prof', fE(tPro));
   set('ps-cnt',  String(entries.length));
-  set('ps-rev-ch',  '+12.5%');
-  set('ps-exp-ch',  '-4.3%');
-  set('ps-prof-ch', '+18.2%');
+  set('ps-rev-ch','—'); set('ps-exp-ch','—'); set('ps-prof-ch','—');
 
   set('pt-rows', entries.map(p=>{
     const emoji=EMOJIS[p.name]||'📁';
@@ -640,14 +733,14 @@ function renderProjects(d) {
       </div>
       <div class="pt-more"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></div>
     </div>`;
-  }).join('') || '<div style="padding:20px;color:var(--muted);text-align:center;font-size:12px">Нет данных — запиши транзакции через бота</div>');
+  }).join('')||'<div style="padding:20px;color:var(--muted);text-align:center;font-size:12px">Нет данных за этот месяц</div>');
 
   drawProjLine(entries, pm, prPeriod);
   drawProjDonut(entries, tPro);
 
   if(entries.length) {
-    const bySorted=[...entries].sort((a,b)=>b.profit-a.profit);
-    const top=bySorted[0], low=bySorted[bySorted.length-1];
+    const top=[...entries].sort((a,b)=>b.profit-a.profit)[0];
+    const low=[...entries].sort((a,b)=>a.profit-b.profit)[0];
     const eff=[...entries].sort((a,b)=>b.margin-a.margin)[0];
     set('perf-rows',`
       <div class="perf-row"><div class="perf-ico up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div><div class="perf-info"><div class="perf-type">Top Performer</div><div class="perf-name">${top.name}</div></div><div class="perf-val">${fE(top.profit)}</div></div>
@@ -683,15 +776,16 @@ function setProjPeriod(n,btn) {
   document.querySelectorAll('#page-projects .ptab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   if(!G) return;
-  const bp=G.byProject||{}, pm=G.projectMonthly||{};
-  const entries = getProjectEntries(bp);
-  drawProjLine(entries, pm, n);
+  const entries = getProjectEntries(G.byProject||{});
+  drawProjLine(entries, G.projectMonthly||{}, n);
 }
 
 // ════ ACCOUNTS ════
-function renderAccounts(d) {
-  const accs=d.byAccount||{}, entries=Object.entries(accs);
-  const typeEmoji={'Карта':'💳','Крипта':'🪙','Наличные':'💵','Другое':'🏦'};
+function renderAccounts() {
+  if(!G) return;
+  const accs = G.byAccount||{};
+  const entries = Object.entries(accs);
+  const typeEmoji = {'Карта':'💳','Крипта':'🪙','Наличные':'💵','Другое':'🏦'};
   if(!entries.length){ set('acc-list','<div style="padding:20px;color:var(--muted);text-align:center">Нет счетов</div>'); return; }
   set('acc-list', entries.map(([name,info])=>{
     const emoji=typeEmoji[info.type]||'🏦', val=info.balance||0, cls=val>=0?'var(--green)':'var(--red)';
@@ -700,188 +794,130 @@ function renderAccounts(d) {
 }
 
 // ════ CALENDAR ════
-
-// Строим карту транзакций по дням из данных G
-// G.monthly содержит агрегаты — нам нужны raw транзакции
-// Поскольку getStats не возвращает raw list, делаем отдельный запрос
-let calRawLoaded = false;
-let calRaw = []; // [{date, amount, currency, type, project, category, account, description}]
-
-async function loadCalRaw() {
-  if(calRawLoaded) return;
-  try {
-    const r = await fetch(API+'?action=getTransactions');
-    const d = await r.json();
-    if(d && d.transactions) {
-      calRaw = d.transactions;
-    }
-    calRawLoaded = true;
-  } catch(e) {
-    // Если getTransactions не реализован — строим из monthly приближённо
-    calRawLoaded = true;
-  }
-}
-
-// Строим calTxMap из byProject/byCategory агрегатов
-// Поскольку у нас нет raw транзакций через API, используем monthly для отображения в календаре
-// При наличии getTransactions — перестраиваем
-function buildCalTxMap(d) {
+function buildCalTxMap() {
   calTxMap = {};
-  // Если raw данные загружены — используем их
-  if(calRaw.length > 0) {
-    for(const tx of calRaw) {
-      if(!tx.date) continue;
-      const dt = new Date(tx.date);
-      if(isNaN(dt)) continue;
-      const key = dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');
-      if(!calTxMap[key]) calTxMap[key] = [];
-      calTxMap[key].push(tx);
-    }
+  for(const tx of allTx) {
+    if(!tx.date || tx.type === 'Перевод') continue;
+    const dt = new Date(tx.date);
+    if(isNaN(dt)) continue;
+    const key = dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');
+    if(!calTxMap[key]) calTxMap[key] = [];
+    calTxMap[key].push(tx);
   }
 }
 
 function buildCalendar() {
-  const now = new Date();
   const months_ru = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
   set('cal-month-label', months_ru[calMonth]+' '+calYear);
 
-  // Month stats from G.monthly
-  const monthly = G ? (G.monthly||{}) : {};
-  // Find matching key
-  const testDate = new Date(calYear, calMonth, 15);
-  const monthKey = testDate.toLocaleString('ru', {month:'short', year:'2-digit'});
-  const mData = monthly[monthKey] || {income:0,expense:0};
-  const net = (mData.income||0)-(mData.expense||0);
-  set('cal-inc-total', '+ '+fE(mData.income||0));
-  set('cal-exp-total', '- '+fE(mData.expense||0));
+  // Month strip stats — считаем из allTx
+  let mInc=0, mExp=0;
+  const firstDay = new Date(calYear, calMonth, 1);
+  const lastDay  = new Date(calYear, calMonth+1, 0, 23,59,59);
+  for(const tx of allTx) {
+    if(!tx.date || tx.type==='Перевод') continue;
+    const dt = new Date(tx.date);
+    if(dt < firstDay || dt > lastDay) continue;
+    if(tx.currency !== 'EUR' && tx.currency !== 'UAH') continue;
+    if(tx.type==='Доход')  mInc += tx.amount;
+    if(tx.type==='Расход') mExp += tx.amount;
+  }
+  const net = mInc - mExp;
+  set('cal-inc-total', '+'+fE(mInc));
+  set('cal-exp-total', '-'+fE(mExp));
   const netEl = document.getElementById('cal-net-total');
-  if(netEl) { netEl.textContent = (net>=0?'+':'')+fE(net); netEl.style.color = net>=0?'var(--green)':'var(--red)'; }
+  if(netEl){ netEl.textContent=(net>=0?'+':'')+fE(net); netEl.style.color=net>=0?'var(--green)':'var(--red)'; }
 
   // Build grid
-  const firstDay = new Date(calYear, calMonth, 1);
-  let startDow = firstDay.getDay(); // 0=Sun
-  // Convert to Mon-start: Mon=0..Sun=6
-  startDow = (startDow + 6) % 7;
+  let startDow = new Date(calYear, calMonth, 1).getDay();
+  startDow = (startDow+6)%7; // Mon=0
   const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
-  const daysInPrev = new Date(calYear, calMonth, 0).getDate();
+  const daysInPrev  = new Date(calYear, calMonth, 0).getDate();
 
   const cells = [];
-  // Previous month filler
   for(let i=startDow-1; i>=0; i--) cells.push({day:daysInPrev-i, month:'prev'});
-  // Current month
   for(let d=1; d<=daysInMonth; d++) cells.push({day:d, month:'cur'});
-  // Next month filler
-  const rem = (7 - (cells.length%7)) % 7;
+  const rem=(7-(cells.length%7))%7;
   for(let d=1; d<=rem; d++) cells.push({day:d, month:'next'});
 
-  const todayStr = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+  const now=new Date();
+  const todayStr=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
 
-  const grid = document.getElementById('cal-grid');
-  if(!grid) return;
-  grid.innerHTML = '';
+  const grid=document.getElementById('cal-grid'); if(!grid) return;
+  grid.innerHTML='';
 
   cells.forEach(cell => {
-    const div = document.createElement('div');
-    div.className = 'cal-day';
-    if(cell.month !== 'cur') div.classList.add('other-month');
+    const div=document.createElement('div');
+    div.className='cal-day';
+    if(cell.month!=='cur') div.classList.add('other-month');
 
-    let dateStr = null;
-    if(cell.month === 'cur') {
-      dateStr = calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(cell.day).padStart(2,'0');
-      if(dateStr === todayStr) div.classList.add('today');
-      if(calSelected === dateStr) div.classList.add('selected');
+    let dateStr=null;
+    if(cell.month==='cur') {
+      dateStr=calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(cell.day).padStart(2,'0');
+      if(dateStr===todayStr) div.classList.add('today');
+      if(calSelected===dateStr) div.classList.add('selected');
     }
 
-    // Day number
-    const numEl = document.createElement('div');
-    numEl.className = 'cal-day-num';
-    numEl.textContent = cell.day;
+    const numEl=document.createElement('div');
+    numEl.className='cal-day-num';
+    numEl.textContent=cell.day;
     div.appendChild(numEl);
 
-    // Dots and sums for days with transactions
-    if(dateStr && calTxMap[dateStr] && calTxMap[dateStr].length > 0) {
-      const txs = calTxMap[dateStr];
-      const incAmt = txs.filter(t=>t.type==='Доход').reduce((s,t)=>s+(t.amount||0),0);
-      const expAmt = txs.filter(t=>t.type==='Расход').reduce((s,t)=>s+(t.amount||0),0);
-
-      const dotRow = document.createElement('div');
-      dotRow.className = 'cal-dot-row';
-      if(incAmt > 0) { const d=document.createElement('div'); d.className='cal-dot income'; dotRow.appendChild(d); }
-      if(expAmt > 0) { const d=document.createElement('div'); d.className='cal-dot expense'; dotRow.appendChild(d); }
-      div.appendChild(dotRow);
-
-      const sumEl = document.createElement('div');
-      sumEl.className = 'cal-day-sum';
-      if(incAmt>0) sumEl.innerHTML += `<div class="cal-inc">+${fS(incAmt)}</div>`;
-      if(expAmt>0) sumEl.innerHTML += `<div class="cal-exp">-${fS(expAmt)}</div>`;
+    if(dateStr && calTxMap[dateStr]) {
+      const txs=calTxMap[dateStr];
+      const incAmt=txs.filter(t=>t.type==='Доход').reduce((s,t)=>s+(t.amount||0),0);
+      const expAmt=txs.filter(t=>t.type==='Расход').reduce((s,t)=>s+(t.amount||0),0);
+      const sumEl=document.createElement('div');
+      sumEl.className='cal-day-sum';
+      if(incAmt>0) sumEl.innerHTML+=`<div class="cal-inc">+${fmtShort(incAmt)}</div>`;
+      if(expAmt>0) sumEl.innerHTML+=`<div class="cal-exp">-${fmtShort(expAmt)}</div>`;
       div.appendChild(sumEl);
     }
 
-    if(cell.month === 'cur' && dateStr) {
-      div.style.cursor = 'pointer';
-      div.onclick = () => calSelectDay(dateStr, cell.day);
+    if(cell.month==='cur' && dateStr) {
+      div.style.cursor='pointer';
+      div.addEventListener('click', (e) => calSelectDay(e, dateStr, cell.day));
     }
-
     grid.appendChild(div);
   });
 }
 
-function calSelectDay(dateStr, dayNum) {
-  calSelected = dateStr;
-  // Re-highlight selected
-  document.querySelectorAll('.cal-day').forEach(d => d.classList.remove('selected'));
-  event.currentTarget.classList.add('selected');
+function calSelectDay(e, dateStr, dayNum) {
+  calSelected=dateStr;
+  document.querySelectorAll('.cal-day').forEach(d=>d.classList.remove('selected'));
+  e.currentTarget.classList.add('selected');
 
-  const months_ru = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+  const months_ru=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
   set('cal-side-date', dayNum+' '+months_ru[calMonth]+' '+calYear);
 
-  const txs = calTxMap[dateStr] || [];
-  if(!txs.length) {
-    set('cal-side-txs', '<div class="cal-no-tx">Нет транзакций</div>');
-    return;
-  }
+  const txs=calTxMap[dateStr]||[];
+  if(!txs.length){ set('cal-side-txs','<div class="cal-no-tx">Нет транзакций</div>'); return; }
 
-  const rows = txs.map(tx => {
-    const isInc = tx.type === 'Доход';
-    const symb = {UAH:'₴',EUR:'€',USD:'$',USDT:'USDT',ETH:'ETH'}[tx.currency] || tx.currency;
+  const symb={UAH:'₴',EUR:'€',USD:'$',USDT:'USDT',ETH:'ETH'};
+  const rows=txs.map(tx=>{
+    const isInc=tx.type==='Доход';
+    const s=symb[tx.currency]||tx.currency;
     return `<div class="cal-tx-row">
       <div class="cal-tx-dot ${isInc?'income':'expense'}"></div>
       <div class="cal-tx-info">
         <div class="cal-tx-name">${tx.description||tx.category||tx.project||'—'}</div>
         <div class="cal-tx-cat">${tx.category||tx.project||''}</div>
       </div>
-      <div class="cal-tx-amt ${isInc?'inc':'exp'}">${isInc?'+':'-'}${fmt(tx.amount||0)} ${symb}</div>
+      <div class="cal-tx-amt ${isInc?'inc':'exp'}">${isInc?'+':'-'}${fmt(tx.amount||0)} ${s}</div>
     </div>`;
   }).join('');
   set('cal-side-txs', rows);
 }
 
-function calPrev() {
-  calMonth--;
-  if(calMonth < 0) { calMonth = 11; calYear--; }
-  calSelected = null;
-  buildCalendar();
-}
-
-function calNext() {
-  calMonth++;
-  if(calMonth > 11) { calMonth = 0; calYear++; }
-  calSelected = null;
-  buildCalendar();
-}
-
-function calGoToday() {
-  const now = new Date();
-  calYear = now.getFullYear();
-  calMonth = now.getMonth();
-  calSelected = null;
-  buildCalendar();
-}
+function calPrev(){ calMonth--; if(calMonth<0){calMonth=11;calYear--;} calSelected=null; buildCalendar(); }
+function calNext(){ calMonth++; if(calMonth>11){calMonth=0;calYear++;} calSelected=null; buildCalendar(); }
+function calGoToday(){ const n=new Date(); calYear=n.getFullYear(); calMonth=n.getMonth(); calSelected=null; buildCalendar(); }
 
 // ── utils ──
 function set(id,html){ const e=document.getElementById(id); if(e) e.innerHTML=html; }
 function fE(n){ const a=Math.abs(Math.round(n)); return (n<0?'- ':'')+'€ '+a.toLocaleString('ru')+'.00'; }
 function fS(n){ if(Math.abs(n)>=1000) return '€'+(n/1000).toFixed(1)+'k'; return '€'+Math.round(n); }
+function fmtShort(n){ if(n>=1000) return (n/1000).toFixed(1)+'k'; return String(Math.round(n)); }
 function fmt(n){ return Math.round(Math.abs(n)).toLocaleString('ru'); }
 
 init();
