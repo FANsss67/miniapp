@@ -483,7 +483,8 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbyppouk7LMv5oEq0yjzM6iJoteQtM4HavFMB3fRqfSmh_WsYF59kV0PS6goVegnN927/exec';
 // Список настоящих проектов — только они показываются на странице Projects
-const REAL_PROJECTS = ['YouTube', 'Крипта', 'AI OFM', 'Пособие', 'Общий'];
+// Список проектов берётся из API (G.projectList), этот массив — фолбэк если API не вернул
+const REAL_PROJECTS_FALLBACK = ['YouTube', 'Крипта', 'AI OFM', 'Общий'];
 const COLORS = ['#f87171','#60a5fa','#a78bfa','#4ade80','#fb923c','#facc15','#34d399','#f472b6'];
 const EMOJIS = {'YouTube':'▶️','Крипта':'🪙','AI OFM':'🤖','Пособие':'🏛️','Общий':'📦'};
 
@@ -542,7 +543,7 @@ function renderDash(d) {
   set('sum-inc-t', fE(inc));
   set('sum-exp-t', fE(exp));
   // Income rows: only real projects
-  const ir = REAL_PROJECTS
+  const ir = getRealProjects()
     .filter(p => projs[p] && (projs[p].income||0) > 0)
     .map(p => [p, projs[p]])
     .sort(([,a],[,b])=>(b.income||0)-(a.income||0))
@@ -590,9 +591,11 @@ function setOvPeriod(n,btn) {
 }
 
 // ════ PROJECTS ════
-// Ключевое исправление: фильтруем только реальные проекты из списка REAL_PROJECTS
+function getRealProjects() {
+  return (G && G.projectList && G.projectList.length) ? G.projectList : REAL_PROJECTS_FALLBACK;
+}
 function getProjectEntries(bp) {
-  return REAL_PROJECTS
+  return getRealProjects()
     .filter(name => bp[name])
     .map((name, i) => ({
       name,
