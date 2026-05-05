@@ -238,6 +238,98 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
   .sidebar{bottom:0;top:auto;width:100%;height:56px;flex-direction:row;justify-content:space-around;padding:0 8px;border-right:none;border-top:1px solid var(--border);}
   .sb-icon.menu,.sb-icon.settings{margin:0;}
 }
+
+/* ═══ TRADES PAGE ═══ */
+.trades-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:0;}
+.trade-stat{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:16px 18px;}
+.trade-stat-label{font-size:9px;letter-spacing:0.13em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.trade-stat-val{font-size:22px;font-weight:300;font-family:'DM Mono',monospace;letter-spacing:-0.01em;}
+.trade-stat-val.pos{color:var(--green);}
+.trade-stat-val.neg{color:var(--red);}
+.trade-stat-sub{font-size:11px;color:var(--muted);margin-top:4px;}
+
+.trade-card{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:16px 18px;transition:border-color 0.15s;}
+.trade-card:hover{border-color:var(--border2);}
+.trade-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.trade-pair{display:flex;align-items:center;gap:8px;}
+.trade-pair-name{font-size:15px;font-weight:500;}
+.trade-dir{font-size:10px;font-weight:600;letter-spacing:0.08em;padding:3px 8px;border-radius:5px;}
+.trade-dir.long{background:#4ade8020;color:var(--green);}
+.trade-dir.short{background:#f8717120;color:var(--red);}
+.trade-lev{font-size:11px;color:var(--muted);background:var(--s2);padding:2px 7px;border-radius:5px;font-family:'DM Mono',monospace;}
+.trade-status{font-size:10px;color:var(--muted);display:flex;align-items:center;gap:5px;}
+.trade-status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);}
+.trade-status-dot.open{background:var(--blue);}
+
+.trade-levels{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;}
+.trade-level{background:var(--s2);border-radius:8px;padding:8px 10px;}
+.trade-level-label{font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+.trade-level-val{font-size:13px;font-family:'DM Mono',monospace;}
+.trade-level-val.sl{color:var(--red);}
+.trade-level-val.tp{color:var(--green);}
+
+.trade-pnl-row{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--border);}
+.trade-pnl-label{font-size:10px;color:var(--muted);}
+.trade-pnl-val{font-size:16px;font-family:'DM Mono',monospace;font-weight:500;}
+.trade-pnl-val.pos{color:var(--green);}
+.trade-pnl-val.neg{color:var(--red);}
+.trade-pnl-pct{font-size:11px;color:var(--muted);margin-left:6px;}
+
+.trade-meta{font-size:10px;color:var(--muted2);margin-top:6px;display:flex;gap:12px;}
+
+.trades-list{display:flex;flex-direction:column;gap:10px;}
+
+.add-trade-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--s1);border:1px dashed var(--border2);border-radius:14px;padding:18px;cursor:pointer;color:var(--muted);font-size:13px;transition:all 0.2s;}
+.add-trade-btn:hover{border-color:#444;color:var(--text);}
+.add-trade-btn svg{width:16px;height:16px;}
+
+.winrate-bar{height:4px;background:var(--border);border-radius:2px;margin-top:8px;overflow:hidden;}
+.winrate-fill{height:100%;background:var(--green);border-radius:2px;transition:width 0.6s;}
+
+/* ═══ CONNECTIONS PAGE ═══ */
+.conn-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.conn-card{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:20px 22px;position:relative;overflow:hidden;transition:border-color 0.2s;}
+.conn-card.connected{border-color:#2a3a2a;}
+.conn-card.connected::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),#22c55e80);}
+.conn-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.conn-logo{width:40px;height:40px;border-radius:10px;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.conn-status{display:flex;align-items:center;gap:5px;font-size:10px;}
+.conn-status-dot{width:6px;height:6px;border-radius:50%;}
+.conn-status-dot.on{background:var(--green);}
+.conn-status-dot.off{background:var(--muted2);}
+.conn-name{font-size:14px;font-weight:500;margin-bottom:3px;}
+.conn-type{font-size:11px;color:var(--muted);}
+.conn-meta{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);}
+.conn-meta-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.conn-meta-row:last-child{margin-bottom:0;}
+.conn-meta-label{font-size:10px;color:var(--muted);}
+.conn-meta-val{font-size:11px;font-family:'DM Mono',monospace;}
+.conn-meta-val.pos{color:var(--green);}
+.conn-meta-val.neg{color:var(--red);}
+.conn-btn{margin-top:14px;width:100%;padding:8px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--muted);font-size:11px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.15s;text-align:center;}
+.conn-btn:hover{border-color:var(--border2);color:var(--text);}
+.conn-btn.disconnect{border-color:#f8717140;color:var(--red);}
+.conn-btn.disconnect:hover{background:#f8717110;}
+
+.conn-add-card{background:var(--s1);border:1px dashed var(--border2);border-radius:16px;padding:20px 22px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;min-height:160px;transition:all 0.2s;}
+.conn-add-card:hover{border-color:#444;}
+.conn-add-ico{width:36px;height:36px;border:1px solid var(--border2);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--muted);}
+.conn-add-ico svg{width:16px;height:16px;}
+.conn-add-txt{font-size:12px;color:var(--muted);text-align:center;}
+
+.conn-how{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:20px 22px;}
+.conn-how-title{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
+.conn-step{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;}
+.conn-step:last-child{margin-bottom:0;}
+.conn-step-num{width:22px;height:22px;border-radius:50%;background:var(--s2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-family:'DM Mono',monospace;flex-shrink:0;margin-top:1px;}
+.conn-step-text{font-size:12px;color:var(--muted);line-height:1.5;}
+.conn-step-text strong{color:var(--text);}
+
+.conn-sync-bar{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;}
+.conn-sync-info{font-size:11px;color:var(--muted);}
+.conn-sync-btn{padding:6px 14px;border:1px solid var(--border);border-radius:7px;background:transparent;color:var(--muted);font-size:11px;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;}
+.conn-sync-btn:hover{color:var(--text);border-color:var(--border2);}
+.conn-sync-btn svg{width:12px;height:12px;}
 </style>
 </head>
 <body>
@@ -258,6 +350,12 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
   </div>
   <div class="sb-icon" onclick="switchPage('calendar',this)" title="Calendar">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+  </div>
+  <div class="sb-icon" onclick="switchPage('trades',this)" title="Trades">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+  </div>
+  <div class="sb-icon" onclick="switchPage('connections',this)" title="Connections">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
   </div>
   <div class="sb-icon settings">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
@@ -420,6 +518,109 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
   </div>
 </div>
 
+
+<!-- ══ TRADES ══ -->
+<div id="page-trades" class="page">
+  <div class="topbar">
+    <span class="topbar-title">Trades</span>
+    <button class="date-btn" onclick="loadTrades()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:13px;height:13px"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+      <span>Обновить</span>
+    </button>
+  </div>
+  <div class="content">
+    <!-- Stats strip -->
+    <div class="trades-stats">
+      <div class="trade-stat">
+        <div class="trade-stat-label">Всего сделок</div>
+        <div class="trade-stat-val" id="tr-total">—</div>
+        <div class="trade-stat-sub"><span id="tr-wins" style="color:var(--green)">0</span> прибыльных · <span id="tr-losses" style="color:var(--red)">0</span> убыточных</div>
+      </div>
+      <div class="trade-stat">
+        <div class="trade-stat-label">Винрейт</div>
+        <div class="trade-stat-val" id="tr-winrate">—</div>
+        <div class="winrate-bar"><div class="winrate-fill" id="tr-winrate-bar" style="width:0%"></div></div>
+      </div>
+      <div class="trade-stat">
+        <div class="trade-stat-label">Общий PnL</div>
+        <div class="trade-stat-val" id="tr-pnl">—</div>
+        <div class="trade-stat-sub">Средний: <span id="tr-avg-pnl">—</span></div>
+      </div>
+    </div>
+
+    <!-- Trades list -->
+    <div class="card card-pad">
+      <div class="card-hdr">
+        <span class="card-ttl">История сделок</span>
+        <div class="period-tabs">
+          <button class="ptab active" onclick="filterTrades('all',this)">Все</button>
+          <button class="ptab" onclick="filterTrades('long',this)">Long</button>
+          <button class="ptab" onclick="filterTrades('short',this)">Short</button>
+        </div>
+      </div>
+      <div class="trades-list" id="trades-list">
+        <div style="color:var(--muted);text-align:center;padding:24px;font-size:12px">Загрузка...</div>
+      </div>
+    </div>
+
+    <div class="add-trade-btn" onclick="window.open('https://t.me/myfinance_yourname_bot?start=trades')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Добавить сделку через Telegram бота
+    </div>
+
+    <div class="footnote">Сделки синхронизируются с Google Таблицей</div>
+  </div>
+</div>
+
+<!-- ══ CONNECTIONS ══ -->
+<div id="page-connections" class="page">
+  <div class="topbar">
+    <span class="topbar-title">Connections</span>
+    <button class="conn-sync-btn" onclick="loadConnections()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+      Синхронизировать
+    </button>
+  </div>
+  <div class="content">
+
+    <!-- Sync bar -->
+    <div class="conn-sync-bar">
+      <div class="conn-sync-info">Последняя синхронизация: <span id="conn-last-sync">—</span></div>
+      <div style="font-size:11px;color:var(--muted)" id="conn-count">0 подключений</div>
+    </div>
+
+    <!-- Connected accounts grid -->
+    <div class="conn-grid" id="conn-grid">
+      <div style="grid-column:1/-1;padding:32px;text-align:center;color:var(--muted);font-size:12px">
+        Загрузка подключений...
+      </div>
+    </div>
+
+    <!-- How to connect -->
+    <div class="conn-how">
+      <div class="conn-how-title">Как подключить биржу или кошелёк</div>
+      <div class="conn-step">
+        <div class="conn-step-num">1</div>
+        <div class="conn-step-text">Открой Telegram бота и напиши <strong>/connect</strong></div>
+      </div>
+      <div class="conn-step">
+        <div class="conn-step-num">2</div>
+        <div class="conn-step-text">Выбери биржу: <strong>Binance, Bybit, Kraken, Coinbase</strong> или кошелёк</div>
+      </div>
+      <div class="conn-step">
+        <div class="conn-step-num">3</div>
+        <div class="conn-step-text">Вставь API Key и Secret. Используй ключи только с правом <strong>Read Only</strong> — бот не может выводить средства</div>
+      </div>
+      <div class="conn-step">
+        <div class="conn-step-num">4</div>
+        <div class="conn-step-text">Выбери проект и категорию дохода — баланс и сделки будут автоматически добавляться в финансы</div>
+      </div>
+    </div>
+
+    <div class="footnote">Подключения хранятся в Google Таблице · API ключи только для чтения</div>
+  </div>
+</div>
+
 <!-- ══ CALENDAR ══ -->
 <div id="page-calendar" class="page">
   <div class="topbar">
@@ -514,6 +715,8 @@ function switchPage(name, el) {
   document.querySelectorAll('.sb-icon').forEach(i => i.classList.remove('active'));
   if(el) el.classList.add('active');
   if(name === 'calendar') buildCalendar();
+  if(name === 'trades')       loadTrades();
+  if(name === 'connections')  loadConnections();
 }
 
 // ════ INIT ════
@@ -919,6 +1122,236 @@ function fE(n){ const a=Math.abs(Math.round(n)); return (n<0?'- ':'')+'€ '+a.t
 function fS(n){ if(Math.abs(n)>=1000) return '€'+(n/1000).toFixed(1)+'k'; return '€'+Math.round(n); }
 function fmtShort(n){ if(n>=1000) return (n/1000).toFixed(1)+'k'; return String(Math.round(n)); }
 function fmt(n){ return Math.round(Math.abs(n)).toLocaleString('ru'); }
+
+// ════ TRADES ════
+let allTrades = [];
+let tradesFilter = 'all';
+let tradesLoaded = false;
+
+async function loadTrades() {
+  if(!tradesLoaded) {
+    document.getElementById('trades-list').innerHTML = '<div style="color:var(--muted);text-align:center;padding:24px;font-size:12px">Загрузка...</div>';
+  }
+  try {
+    const r = await fetch(API + '?action=getTrades');
+    const d = await r.json();
+    if(d && d.trades) {
+      allTrades = d.trades;
+      tradesLoaded = true;
+      renderTradesStats(d.stats);
+      renderTradesList();
+    }
+  } catch(e) { console.error('Trades load error:', e); }
+}
+
+function renderTradesStats(s) {
+  if(!s) return;
+  const pnlEl = document.getElementById('tr-pnl');
+  const winEl = document.getElementById('tr-winrate');
+  set('tr-total',   String(s.total || 0));
+  set('tr-wins',    String(s.wins  || 0));
+  set('tr-losses',  String(s.losses|| 0));
+  const wr = (s.winrate||0).toFixed(1) + '%';
+  if(winEl) { winEl.textContent = wr; }
+  const bar = document.getElementById('tr-winrate-bar');
+  if(bar) bar.style.width = Math.min(100, s.winrate||0) + '%';
+  if(pnlEl) {
+    const pnl = s.totalPnl || 0;
+    pnlEl.textContent = (pnl >= 0 ? '+' : '') + pnl.toFixed(2) + ' $';
+    pnlEl.className = 'trade-stat-val ' + (pnl >= 0 ? 'pos' : 'neg');
+  }
+  const avgEl = document.getElementById('tr-avg-pnl');
+  if(avgEl) {
+    const avg = s.avgPnl || 0;
+    avgEl.textContent = (avg >= 0 ? '+' : '') + avg.toFixed(2) + '$';
+    avgEl.style.color = avg >= 0 ? 'var(--green)' : 'var(--red)';
+  }
+}
+
+function filterTrades(f, btn) {
+  tradesFilter = f;
+  document.querySelectorAll('#page-trades .ptab').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderTradesList();
+}
+
+function renderTradesList() {
+  const list = document.getElementById('trades-list');
+  if(!list) return;
+
+  let trades = [...allTrades].reverse();
+  if(tradesFilter === 'long')  trades = trades.filter(t => t.direction === 'LONG');
+  if(tradesFilter === 'short') trades = trades.filter(t => t.direction === 'SHORT');
+
+  if(!trades.length) {
+    list.innerHTML = '<div style="color:var(--muted);text-align:center;padding:32px;font-size:12px">Нет сделок · Добавь через Telegram бота</div>';
+    return;
+  }
+
+  list.innerHTML = trades.map(t => {
+    const isLong   = t.direction === 'LONG';
+    const isPos    = (t.pnl || 0) >= 0;
+    const sign     = isPos ? '+' : '';
+    const dt       = new Date(t.date).toLocaleDateString('ru', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+    const isClosed = t.status === 'Закрыта' || !t.status;
+
+    return `<div class="trade-card">
+      <div class="trade-card-top">
+        <div class="trade-pair">
+          <span class="trade-pair-name">${t.pair || '—'}</span>
+          <span class="trade-dir ${isLong ? 'long' : 'short'}">${t.direction || '—'}</span>
+          ${t.leverage ? `<span class="trade-lev">${t.leverage}x</span>` : ''}
+        </div>
+        <div class="trade-status">
+          <div class="trade-status-dot ${isClosed ? '' : 'open'}"></div>
+          ${t.status || 'Закрыта'}
+        </div>
+      </div>
+      <div class="trade-levels">
+        <div class="trade-level">
+          <div class="trade-level-label">Вход</div>
+          <div class="trade-level-val">${t.entry || '—'}</div>
+        </div>
+        <div class="trade-level">
+          <div class="trade-level-label">SL</div>
+          <div class="trade-level-val sl">${t.sl || '—'}</div>
+        </div>
+        <div class="trade-level">
+          <div class="trade-level-label">TP</div>
+          <div class="trade-level-val tp">${t.tp || '—'}</div>
+        </div>
+      </div>
+      <div class="trade-pnl-row">
+        <span class="trade-pnl-label">Итоговый PnL</span>
+        <div>
+          <span class="trade-pnl-val ${isPos ? 'pos' : 'neg'}">${sign}${(t.pnl||0).toFixed(2)} USDT</span>
+          ${t.pnlPct ? `<span class="trade-pnl-pct">(${sign}${t.pnlPct}%)</span>` : ''}
+        </div>
+      </div>
+      <div class="trade-meta">
+        <span>${dt}</span>
+        ${t.exchange ? `<span>${t.exchange}</span>` : ''}
+        ${t.margin ? `<span>${t.margin}</span>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ════ CONNECTIONS ════
+let connectionsData = [];
+
+const EXCHANGE_INFO = {
+  'Binance':  { emoji: '🟡', color: '#f0b90b', type: 'CEX · Спот + Фьючерсы' },
+  'Bybit':    { emoji: '🟠', color: '#f7a600', type: 'CEX · Фьючерсы + Спот' },
+  'Kraken':   { emoji: '🟣', color: '#5741d9', type: 'CEX · Спот' },
+  'Coinbase': { emoji: '🔵', color: '#1652f0', type: 'CEX · Спот' },
+  'OKX':      { emoji: '⚫', color: '#ffffff', type: 'CEX · Спот + Фьючерсы' },
+  'MetaMask': { emoji: '🦊', color: '#f6851b', type: 'Кошелёк · EVM' },
+  'Другое':   { emoji: '🔗', color: '#666666', type: 'Подключение' }
+};
+
+async function loadConnections() {
+  try {
+    const r = await fetch(API + '?action=getConnections');
+    const d = await r.json();
+    if(d && d.connections) {
+      connectionsData = d.connections;
+      renderConnections(d.connections);
+      const el = document.getElementById('conn-last-sync');
+      if(el) el.textContent = new Date().toLocaleString('ru', {hour:'2-digit',minute:'2-digit',day:'numeric',month:'short'});
+      const cnt = document.getElementById('conn-count');
+      if(cnt) cnt.textContent = d.connections.length + ' подключени' + (d.connections.length === 1 ? 'е' : 'й');
+    }
+  } catch(e) {
+    renderConnections([]);
+    console.error('Connections load error:', e);
+  }
+}
+
+function renderConnections(conns) {
+  const grid = document.getElementById('conn-grid');
+  if(!grid) return;
+
+  let html = '';
+  for(const c of conns) {
+    const info = EXCHANGE_INFO[c.exchange] || EXCHANGE_INFO['Другое'];
+    const balStr = c.balance !== null && c.balance !== undefined
+      ? (c.balanceCurrency === 'USDT' || c.balanceCurrency === 'USD' ? '$' : '€') + Number(c.balance).toLocaleString('ru', {maximumFractionDigits:2})
+      : '—';
+    const pnlStr = c.pnl !== null && c.pnl !== undefined
+      ? (c.pnl >= 0 ? '+' : '') + Number(c.pnl).toFixed(2) + ' $'
+      : null;
+
+    html += `<div class="conn-card connected">
+      <div class="conn-card-top">
+        <div class="conn-logo" style="background:${info.color}18;font-size:22px">${info.emoji}</div>
+        <div class="conn-status">
+          <div class="conn-status-dot on"></div>
+          <span style="color:var(--green)">Подключено</span>
+        </div>
+      </div>
+      <div class="conn-name">${c.exchange}</div>
+      <div class="conn-type">${info.type}</div>
+      <div class="conn-meta">
+        ${c.label ? `<div class="conn-meta-row"><span class="conn-meta-label">Название</span><span class="conn-meta-val">${c.label}</span></div>` : ''}
+        <div class="conn-meta-row"><span class="conn-meta-label">Проект</span><span class="conn-meta-val">${c.project || '—'}</span></div>
+        <div class="conn-meta-row"><span class="conn-meta-label">Категория</span><span class="conn-meta-val">${c.category || '—'}</span></div>
+        ${c.balance !== null && c.balance !== undefined ? `<div class="conn-meta-row"><span class="conn-meta-label">Баланс</span><span class="conn-meta-val pos">${balStr}</span></div>` : ''}
+        ${pnlStr ? `<div class="conn-meta-row"><span class="conn-meta-label">PnL за месяц</span><span class="conn-meta-val ${c.pnl >= 0 ? 'pos' : 'neg'}">${pnlStr}</span></div>` : ''}
+        <div class="conn-meta-row"><span class="conn-meta-label">API Key</span><span class="conn-meta-val" style="color:var(--muted)">${c.apiKeyMasked || '••••••••'}</span></div>
+      </div>
+      <button class="conn-btn disconnect" onclick="disconnectExchange('${c.exchange}', '${c.id || ''}')">Отключить</button>
+    </div>`;
+  }
+
+  // Add new connection card
+  html += `<div class="conn-add-card" onclick="openTgConnect()">
+    <div class="conn-add-ico">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </div>
+    <div class="conn-add-txt">Добавить биржу<br>или кошелёк</div>
+  </div>`;
+
+  if(!conns.length) {
+    // Show all supported exchanges as empty cards
+    const exchanges = ['Binance','Bybit','Kraken','Coinbase','OKX','MetaMask'];
+    html = exchanges.map(ex => {
+      const info = EXCHANGE_INFO[ex];
+      return `<div class="conn-card" style="opacity:0.5">
+        <div class="conn-card-top">
+          <div class="conn-logo" style="font-size:22px">${info.emoji}</div>
+          <div class="conn-status">
+            <div class="conn-status-dot off"></div>
+            <span>Не подключено</span>
+          </div>
+        </div>
+        <div class="conn-name">${ex}</div>
+        <div class="conn-type">${info.type}</div>
+        <button class="conn-btn" onclick="openTgConnect()">Подключить</button>
+      </div>`;
+    }).join('') + `<div class="conn-add-card" onclick="openTgConnect()">
+      <div class="conn-add-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+      <div class="conn-add-txt">Подключить через Telegram</div>
+    </div>`;
+  }
+
+  grid.innerHTML = html;
+
+  const cnt = document.getElementById('conn-count');
+  if(cnt) cnt.textContent = conns.length + ' подключени' + (conns.length === 1 ? 'е' : 'й');
+}
+
+function openTgConnect() {
+  // Открываем бота с командой /connect
+  window.open('https://t.me/myfinance_yourname_bot?start=connect');
+}
+
+function disconnectExchange(exchange, id) {
+  if(!confirm('Отключить ' + exchange + '?')) return;
+  fetch(API + '?action=disconnectExchange&exchange=' + encodeURIComponent(exchange) + '&id=' + encodeURIComponent(id))
+    .then(() => loadConnections())
+    .catch(e => console.error(e));
+}
 
 init();
 </script>
