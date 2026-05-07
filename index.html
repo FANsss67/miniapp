@@ -782,18 +782,22 @@ function getStatsForMonth(year, month) {
     const dt = new Date(tx.date);
     if(dt < firstDay || dt > lastDay) continue;
     if(tx.type === 'Перевод') continue;
-    if(tx.currency !== 'EUR' && tx.currency !== 'UAH') continue;
+
+    // Используем amountEur если есть, иначе пропускаем
+    const val = (tx.amountEur !== null && tx.amountEur !== undefined) ? tx.amountEur : null;
+    if(val === null) continue;
+
     if(tx.type === 'Доход') {
-      income += tx.amount;
-      if(!byProject[tx.project]) byProject[tx.project] = {income:0,expense:0};
-      byProject[tx.project].income += tx.amount;
+      income += val;
+      if(!byProject[tx.project]) byProject[tx.project] = {income:0, expense:0};
+      byProject[tx.project].income += val;
     }
     if(tx.type === 'Расход') {
-      expense += tx.amount;
-      if(!byProject[tx.project]) byProject[tx.project] = {income:0,expense:0};
-      byProject[tx.project].expense += tx.amount;
+      expense += val;
+      if(!byProject[tx.project]) byProject[tx.project] = {income:0, expense:0};
+      byProject[tx.project].expense += val;
       const cat = tx.category || 'Прочее';
-      byCategory[cat] = (byCategory[cat]||0) + tx.amount;
+      byCategory[cat] = (byCategory[cat] || 0) + val;
     }
   }
   return { income, expense, byProject, byCategory };
@@ -806,9 +810,8 @@ function renderDash() {
   // Если выбранный месяц = текущий — берём из G (он уже посчитан)
   const now = new Date();
   let inc, exp, byProject, byCategory;
-  if(selYear === now.getFullYear() && selMonth === now.getMonth()) {
-    inc = G.income||0; exp = G.expense||0;
-    byProject = G.byProject||{}; byCategory = G.byCategory||{};
+  if(false) {
+    // G.income/expense не используем — считаем из транзакций через amountEur
   } else {
     const s = getStatsForMonth(selYear, selMonth);
     inc = s.income; exp = s.expense;
@@ -1131,7 +1134,13 @@ function calGoToday(){ const n=new Date(); calYear=n.getFullYear(); calMonth=n.g
 function set(id,html){ const e=document.getElementById(id); if(e) e.innerHTML=html; }
 function fE(n){ const a=Math.abs(Math.round(n)); return (n<0?'- ':'')+'€ '+a.toLocaleString('ru')+'.00'; }
 function fS(n){ if(Math.abs(n)>=1000) return '€'+(n/1000).toFixed(1)+'k'; return '€'+Math.round(n); }
-function fmtShort(n){ if(n>=1000) return (n/1000).toFixed(1)+'k'; return String(Math.round(n)); }
+function fmtShort(n){ 
+  if(Math.abs(n) < 0.01) return '0';
+  if(Math.abs(n)>=1000) return (n/1000).toFixed(1)+'k'; 
+  if(Math.abs(n) < 10) return n.toFixed(2);
+  if(Math.abs(n) < 100) return n.toFixed(1);
+  return String(Math.round(n)); 
+}
 function fmt(n){ return Math.round(Math.abs(n)).toLocaleString('ru'); }
 
 // ════ TRADES ════
