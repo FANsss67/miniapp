@@ -35,6 +35,24 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
 .date-btn{display:flex;align-items:center;gap:7px;padding:7px 13px;border:1px solid var(--border);border-radius:8px;font-size:11px;color:var(--muted);cursor:pointer;background:transparent;font-family:'DM Sans',sans-serif;}
 .date-btn svg{width:13px;height:13px;}
 .chevron{width:10px!important;height:10px!important;}
+.cal-nav-btn{width:32px;height:32px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.cal-nav-btn:hover{color:var(--text);border-color:var(--border2);}
+.cal-nav-btn svg{width:14px;height:14px;}
+
+/* PERIOD DROPDOWN */
+.period-wrap{display:flex;align-items:center;gap:6px;position:relative;}
+.period-btn{display:flex;align-items:center;gap:7px;padding:7px 13px;border:1px solid var(--border);border-radius:8px;font-size:11px;color:var(--muted);cursor:pointer;background:transparent;font-family:'DM Sans',sans-serif;min-width:140px;justify-content:center;}
+.period-btn:hover{border-color:var(--border2);color:var(--text);}
+.period-btn svg{width:13px;height:13px;flex-shrink:0;}
+.period-drop{position:absolute;top:calc(100% + 8px);right:0;background:var(--s2);border:1px solid var(--border2);border-radius:14px;padding:14px;z-index:100;display:none;min-width:280px;box-shadow:0 8px 32px rgba(0,0,0,0.5);}
+.period-drop.open{display:block;}
+.pd-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.pd-pills{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:4px;}
+.pd-pill{padding:5px 11px;border-radius:7px;font-size:11px;border:1px solid var(--border);background:transparent;color:#888;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+.pd-pill:hover{border-color:var(--border2);color:var(--text);}
+.pd-pill.active{background:var(--s3);border-color:#555;color:var(--text);}
+.pd-pill.special{border-style:dashed;}
+.pd-divider{height:1px;background:var(--border);margin:12px 0;}
 
 /* PAGE WRAPPER */
 .page{display:none;flex-direction:column;}
@@ -169,9 +187,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
 .cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
 .cal-nav-title{font-size:16px;font-weight:500;letter-spacing:-0.01em;}
 .cal-nav-btns{display:flex;gap:4px;}
-.cal-nav-btn{width:32px;height:32px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
-.cal-nav-btn:hover{color:var(--text);border-color:var(--border2);}
-.cal-nav-btn svg{width:14px;height:14px;}
 .cal-grid-header{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px;}
 .cal-dow{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-align:center;padding:6px 0;}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
@@ -190,7 +205,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
 .cal-day-sum .cal-inc{color:var(--green);}
 .cal-day-sum .cal-exp{color:var(--red);}
 
-/* Side panel for selected day */
 .cal-layout{display:grid;grid-template-columns:1fr 280px;gap:20px;align-items:start;}
 .cal-side{background:var(--s1);border:1px solid var(--border);border-radius:16px;padding:20px;position:sticky;top:80px;}
 .cal-side-date{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;}
@@ -207,7 +221,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
 .cal-tx-amt.exp{color:var(--red);}
 .cal-no-tx{font-size:12px;color:var(--muted);text-align:center;padding:24px 0;}
 
-/* Month summary strip */
 .cal-month-strip{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px;}
 .cal-strip-item{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:14px 16px;}
 .cal-strip-label{font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
@@ -231,12 +244,13 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
   .ps-item{border:none;padding:0;}
   .cal-month-strip{grid-template-columns:1fr 1fr;}
   .cal-day{min-height:54px;padding:6px;}
-  .cal-day-sum{font-size:9px;}
+  .cal-day-sum{display:none;}
   .content{padding:16px;}
   .topbar{padding:14px 16px;}
   .main{margin-left:0;}
   .sidebar{bottom:0;top:auto;width:100%;height:56px;flex-direction:row;justify-content:space-around;padding:0 8px;border-right:none;border-top:1px solid var(--border);}
   .sb-icon.menu,.sb-icon.settings{margin:0;}
+  .period-drop{right:-40px;}
 }
 
 /* ═══ TRADES PAGE ═══ */
@@ -276,7 +290,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
 .trade-pnl-pct{font-size:11px;color:var(--muted);margin-left:6px;}
 
 .trade-meta{font-size:10px;color:var(--muted2);margin-top:6px;display:flex;gap:12px;}
-
 .trades-list{display:flex;flex-direction:column;gap:10px;}
 
 .add-trade-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--s1);border:1px dashed var(--border2);border-radius:14px;padding:18px;cursor:pointer;color:var(--muted);font-size:13px;transition:all 0.2s;}
@@ -368,29 +381,47 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
 <div id="page-dashboard" class="page active">
   <div class="topbar">
     <span class="topbar-title">Dashboard</span>
-    <div style="display:flex;align-items:center;gap:4px;">
-      <button class="cal-nav-btn" onclick="topbarPrev('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="15 18 9 12 15 6"/></svg></button>
-      <div class="date-btn" style="cursor:default;">
+    <div class="period-wrap">
+      <button class="cal-nav-btn" onclick="dashNavigate(-1)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="period-btn" onclick="toggleDashDrop(event)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         <span id="dash-date">—</span>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 12 15 18 9"/></svg>
       </div>
-      <button class="cal-nav-btn" onclick="topbarNext('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg></button>
+      <button class="cal-nav-btn" onclick="dashNavigate(1)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <!-- Period dropdown -->
+      <div class="period-drop" id="dash-drop">
+        <div class="pd-label">Специальный период</div>
+        <div class="pd-pills">
+          <button class="pd-pill special" id="pill-all" onclick="dashSelectAllTime(event)">За всё время</button>
+          <button class="pd-pill" id="pill-y-cur" onclick="dashSelectYear(new Date().getFullYear(),event)">2026 год</button>
+          <button class="pd-pill" id="pill-y-prev" onclick="dashSelectYear(new Date().getFullYear()-1,event)">2025 год</button>
+        </div>
+        <div class="pd-divider"></div>
+        <div class="pd-label" id="drop-year-lbl">Месяц — 2026</div>
+        <div class="pd-pills" id="drop-months"></div>
+        <div class="pd-pills" style="margin-top:8px;" id="drop-year-nav"></div>
+      </div>
     </div>
   </div>
   <div class="content">
     <div class="balance-card">
-      <div class="bal-label">Total Balance</div>
+      <div class="bal-label">Total Balance (Net)</div>
       <div class="bal-amount" id="d-balance">—</div>
-      <div class="bal-sub"><span class="pct" id="d-bal-pct">—</span><span>net this month</span></div>
+      <div class="bal-sub"><span class="pct" id="d-bal-pct">—</span><span id="d-bal-period">net this month</span></div>
       <div class="bal-chart-wrap"><canvas id="mini-line"></canvas></div>
     </div>
     <div class="twin">
       <div class="metric-card">
-        <div><div class="m-label">Income</div><div class="m-amount" id="d-income">—</div><div class="m-sub"><span class="up">↑ доходы месяца</span></div></div>
+        <div><div class="m-label">Income</div><div class="m-amount" id="d-income">—</div><div class="m-sub"><span class="up">↑ доходы</span></div></div>
         <div class="ring-wrap"><canvas id="ring-inc"></canvas><div class="ring-lbl"><span class="ring-pct" id="ring-inc-pct">—</span><span class="ring-sub2">of total</span></div></div>
       </div>
       <div class="metric-card">
-        <div><div class="m-label">Expenses</div><div class="m-amount" id="d-expense">—</div><div class="m-sub"><span class="dn">↓ расходы месяца</span></div></div>
+        <div><div class="m-label">Expenses</div><div class="m-amount" id="d-expense">—</div><div class="m-sub"><span class="dn">↓ расходы</span></div></div>
         <div class="ring-wrap"><canvas id="ring-exp"></canvas><div class="ring-lbl"><span class="ring-pct" id="ring-exp-pct">—</span><span class="ring-sub2">of total</span></div></div>
       </div>
     </div>
@@ -433,12 +464,12 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
   <div class="topbar">
     <span class="topbar-title">Projects</span>
     <div style="display:flex;align-items:center;gap:4px;">
-      <button class="cal-nav-btn" onclick="topbarPrev('projects')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <button class="cal-nav-btn" onclick="projNavigate(-1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="15 18 9 12 15 6"/></svg></button>
       <div class="date-btn" style="cursor:default;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         <span id="proj-date">—</span>
       </div>
-      <button class="cal-nav-btn" onclick="topbarNext('projects')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg></button>
+      <button class="cal-nav-btn" onclick="projNavigate(1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg></button>
     </div>
   </div>
   <div class="content">
@@ -506,7 +537,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
     <button class="date-btn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
       <span id="acc-date">—</span>
-      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 12 15 18 9"/></svg>
     </button>
   </div>
   <div class="content">
@@ -518,7 +548,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
   </div>
 </div>
 
-
 <!-- ══ TRADES ══ -->
 <div id="page-trades" class="page">
   <div class="topbar">
@@ -529,7 +558,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
     </button>
   </div>
   <div class="content">
-    <!-- Stats strip -->
     <div class="trades-stats">
       <div class="trade-stat">
         <div class="trade-stat-label">Всего сделок</div>
@@ -547,8 +575,6 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
         <div class="trade-stat-sub">Средний: <span id="tr-avg-pnl">—</span></div>
       </div>
     </div>
-
-    <!-- Trades list -->
     <div class="card card-pad">
       <div class="card-hdr">
         <span class="card-ttl">История сделок</span>
@@ -562,12 +588,10 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
         <div style="color:var(--muted);text-align:center;padding:24px;font-size:12px">Загрузка...</div>
       </div>
     </div>
-
     <div class="add-trade-btn" onclick="window.open('https://t.me/myfinance_yourname_bot?start=trades')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       Добавить сделку через Telegram бота
     </div>
-
     <div class="footnote">Сделки синхронизируются с Google Таблицей</div>
   </div>
 </div>
@@ -582,41 +606,20 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
     </button>
   </div>
   <div class="content">
-
-    <!-- Sync bar -->
     <div class="conn-sync-bar">
       <div class="conn-sync-info">Последняя синхронизация: <span id="conn-last-sync">—</span></div>
       <div style="font-size:11px;color:var(--muted)" id="conn-count">0 подключений</div>
     </div>
-
-    <!-- Connected accounts grid -->
     <div class="conn-grid" id="conn-grid">
-      <div style="grid-column:1/-1;padding:32px;text-align:center;color:var(--muted);font-size:12px">
-        Загрузка подключений...
-      </div>
+      <div style="grid-column:1/-1;padding:32px;text-align:center;color:var(--muted);font-size:12px">Загрузка подключений...</div>
     </div>
-
-    <!-- How to connect -->
     <div class="conn-how">
       <div class="conn-how-title">Как подключить биржу или кошелёк</div>
-      <div class="conn-step">
-        <div class="conn-step-num">1</div>
-        <div class="conn-step-text">Открой Telegram бота и напиши <strong>/connect</strong></div>
-      </div>
-      <div class="conn-step">
-        <div class="conn-step-num">2</div>
-        <div class="conn-step-text">Выбери биржу: <strong>Binance, Bybit, Kraken, Coinbase</strong> или кошелёк</div>
-      </div>
-      <div class="conn-step">
-        <div class="conn-step-num">3</div>
-        <div class="conn-step-text">Вставь API Key и Secret. Используй ключи только с правом <strong>Read Only</strong> — бот не может выводить средства</div>
-      </div>
-      <div class="conn-step">
-        <div class="conn-step-num">4</div>
-        <div class="conn-step-text">Выбери проект и категорию дохода — баланс и сделки будут автоматически добавляться в финансы</div>
-      </div>
+      <div class="conn-step"><div class="conn-step-num">1</div><div class="conn-step-text">Открой Telegram бота и напиши <strong>/connect</strong></div></div>
+      <div class="conn-step"><div class="conn-step-num">2</div><div class="conn-step-text">Выбери биржу: <strong>Binance, Bybit, Kraken, Coinbase</strong> или кошелёк</div></div>
+      <div class="conn-step"><div class="conn-step-num">3</div><div class="conn-step-text">Вставь API Key и Secret. Используй ключи только с правом <strong>Read Only</strong></div></div>
+      <div class="conn-step"><div class="conn-step-num">4</div><div class="conn-step-text">Выбери проект и категорию — баланс и сделки будут автоматически добавляться в финансы</div></div>
     </div>
-
     <div class="footnote">Подключения хранятся в Google Таблице · API ключи только для чтения</div>
   </div>
 </div>
@@ -631,55 +634,31 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
     </button>
   </div>
   <div class="content" style="max-width:1100px;">
-    <!-- Month stats strip -->
     <div class="cal-month-strip">
-      <div class="cal-strip-item">
-        <div class="cal-strip-label">Доходы месяца</div>
-        <div class="cal-strip-val inc" id="cal-inc-total">—</div>
-      </div>
-      <div class="cal-strip-item">
-        <div class="cal-strip-label">Расходы месяца</div>
-        <div class="cal-strip-val exp" id="cal-exp-total">—</div>
-      </div>
-      <div class="cal-strip-item">
-        <div class="cal-strip-label">Итого</div>
-        <div class="cal-strip-val" id="cal-net-total">—</div>
-      </div>
+      <div class="cal-strip-item"><div class="cal-strip-label">Доходы месяца</div><div class="cal-strip-val inc" id="cal-inc-total">—</div></div>
+      <div class="cal-strip-item"><div class="cal-strip-label">Расходы месяца</div><div class="cal-strip-val exp" id="cal-exp-total">—</div></div>
+      <div class="cal-strip-item"><div class="cal-strip-label">Итого</div><div class="cal-strip-val" id="cal-net-total">—</div></div>
     </div>
-
     <div class="cal-layout">
-      <!-- Calendar grid -->
       <div class="card card-pad">
         <div class="cal-nav">
           <div class="cal-nav-title" id="cal-month-label">—</div>
           <div class="cal-nav-btns">
-            <button class="cal-nav-btn" onclick="calPrev()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="15 18 9 12 15 6"/></svg>
-            </button>
-            <button class="cal-nav-btn" onclick="calNext()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg>
-            </button>
+            <button class="cal-nav-btn" onclick="calPrev()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="15 18 9 12 15 6"/></svg></button>
+            <button class="cal-nav-btn" onclick="calNext()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="9 18 15 12 9 6"/></svg></button>
           </div>
         </div>
         <div class="cal-grid-header">
-          <div class="cal-dow">Пн</div>
-          <div class="cal-dow">Вт</div>
-          <div class="cal-dow">Ср</div>
-          <div class="cal-dow">Чт</div>
-          <div class="cal-dow">Пт</div>
-          <div class="cal-dow">Сб</div>
-          <div class="cal-dow">Вс</div>
+          <div class="cal-dow">Пн</div><div class="cal-dow">Вт</div><div class="cal-dow">Ср</div>
+          <div class="cal-dow">Чт</div><div class="cal-dow">Пт</div><div class="cal-dow">Сб</div><div class="cal-dow">Вс</div>
         </div>
         <div class="cal-grid" id="cal-grid"></div>
       </div>
-
-      <!-- Day detail panel -->
       <div class="cal-side">
         <div class="cal-side-date" id="cal-side-date">Выбери день</div>
         <div id="cal-side-txs"><div class="cal-no-tx">Нажми на день чтобы увидеть транзакции</div></div>
       </div>
     </div>
-
     <div class="footnote">Данные из Google Таблицы · Нажми на день чтобы увидеть транзакции</div>
   </div>
 </div>
@@ -692,18 +671,25 @@ const API = 'https://script.google.com/macros/s/AKfycbyppouk7LMv5oEq0yjzM6iJoteQ
 const REAL_PROJECTS_FALLBACK = ['YouTube', 'Крипта', 'AI OFM', 'Общий'];
 const COLORS = ['#f87171','#60a5fa','#a78bfa','#4ade80','#fb923c','#facc15','#34d399','#f472b6'];
 const EMOJIS = {'YouTube':'▶️','Крипта':'🪙','AI OFM':'🤖','Общий':'📦'};
+const MONTHS_SHORT = ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'];
 
 let G = null;
-let allTx = []; // все транзакции из getTransactions
-let calTxMap = {}; // "YYYY-MM-DD" → [tx,...]
+let allTx = [];
+let calTxMap = {};
 let ovChart = null, projLineChart = null, projDonutChart = null;
 let ovPeriod = 3, prPeriod = 3;
 
-// ── Текущий выбранный месяц для Dashboard/Projects/Accounts топбара ──
+// ── Dashboard period state ──
 let selYear  = new Date().getFullYear();
-let selMonth = new Date().getMonth(); // 0-indexed
+let selMonth = new Date().getMonth();
+let selMode  = 'month'; // 'month' | 'year' | 'all'
+let dropYear = new Date().getFullYear();
 
-// ── Календарь ──
+// ── Projects period state ──
+let projYear  = new Date().getFullYear();
+let projMonth = new Date().getMonth();
+
+// ── Calendar ──
 let calYear  = new Date().getFullYear();
 let calMonth = new Date().getMonth();
 let calSelected = null;
@@ -714,16 +700,17 @@ function switchPage(name, el) {
   document.getElementById('page-'+name).classList.add('active');
   document.querySelectorAll('.sb-icon').forEach(i => i.classList.remove('active'));
   if(el) el.classList.add('active');
-  if(name === 'calendar') buildCalendar();
+  if(name === 'calendar')     buildCalendar();
   if(name === 'trades')       loadTrades();
   if(name === 'connections')  loadConnections();
 }
 
 // ════ INIT ════
 async function init() {
-  updateTopbarLabel();
+  updateDashLabel();
+  updateProjLabel();
+  updateAccLabel();
   try {
-    // Загружаем stats и transactions параллельно
     const [rStats, rTx] = await Promise.all([
       fetch(API+'?action=getStats'),
       fetch(API+'?action=getTransactions')
@@ -741,93 +728,161 @@ async function init() {
   } catch(e){ console.error('Init error:', e); }
 }
 
-// ════ TOPBAR — переключение месяца ════
-function updateTopbarLabel() {
-  const d = new Date(selYear, selMonth, 1);
-  const lbl = d.toLocaleString('ru', {month:'long', year:'numeric'});
-  ['dash-date','proj-date','acc-date'].forEach(id => {
-    const el = document.getElementById(id);
-    if(el) el.textContent = lbl;
-  });
-}
-
-function topbarPrev(page) {
-  selMonth--;
-  if(selMonth < 0) { selMonth = 11; selYear--; }
-  updateTopbarLabel();
-  if(page === 'dashboard') renderDash();
-  if(page === 'projects')  renderProjects();
-  if(page === 'accounts')  renderAccounts();
-}
-
-function topbarNext(page) {
-  selMonth++;
-  if(selMonth > 11) { selMonth = 0; selYear++; }
-  updateTopbarLabel();
-  if(page === 'dashboard') renderDash();
-  if(page === 'projects')  renderProjects();
-  if(page === 'accounts')  renderAccounts();
-}
-
-// Считаем stats за выбранный месяц из allTx
-function getStatsForMonth(year, month) {
-  const firstDay = new Date(year, month, 1);
-  const lastDay  = new Date(year, month+1, 0, 23, 59, 59);
+// ════ PERIOD HELPERS ════
+function getStatsForPeriod(from, to) {
   let income = 0, expense = 0;
-  const byProject  = {};
-  const byCategory = {};
-
+  const byProject = {}, byCategory = {};
   for(const tx of allTx) {
-    if(!tx.date) continue;
+    if(!tx.date || tx.type === 'Перевод') continue;
     const dt = new Date(tx.date);
-    if(dt < firstDay || dt > lastDay) continue;
-    if(tx.type === 'Перевод') continue;
-
-    // Используем amountEur если есть, иначе пропускаем
-    const val = (tx.amountEur !== null && tx.amountEur !== undefined) ? tx.amountEur : null;
-    if(val === null) continue;
-
+    if(from && dt < from) continue;
+    if(to   && dt > to)   continue;
+    const amt = (tx.amountEur !== null && tx.amountEur !== undefined) ? tx.amountEur : tx.amount;
+    if(!amt) continue;
     if(tx.type === 'Доход') {
-      income += val;
-      if(!byProject[tx.project]) byProject[tx.project] = {income:0, expense:0};
-      byProject[tx.project].income += val;
+      income += amt;
+      if(!byProject[tx.project]) byProject[tx.project] = {income:0,expense:0};
+      byProject[tx.project].income += amt;
     }
     if(tx.type === 'Расход') {
-      expense += val;
-      if(!byProject[tx.project]) byProject[tx.project] = {income:0, expense:0};
-      byProject[tx.project].expense += val;
+      expense += amt;
+      if(!byProject[tx.project]) byProject[tx.project] = {income:0,expense:0};
+      byProject[tx.project].expense += amt;
       const cat = tx.category || 'Прочее';
-      byCategory[cat] = (byCategory[cat] || 0) + val;
+      byCategory[cat] = (byCategory[cat]||0) + amt;
     }
   }
   return { income, expense, byProject, byCategory };
 }
 
-// ════ DASHBOARD ════
+function getStatsForMonth(year, month) {
+  return getStatsForPeriod(
+    new Date(year, month, 1),
+    new Date(year, month+1, 0, 23, 59, 59)
+  );
+}
+
+// ════ DASHBOARD PERIOD CONTROLS ════
+function getDashLabel() {
+  if(selMode === 'all')  return 'За всё время';
+  if(selMode === 'year') return selYear + ' год';
+  return new Date(selYear, selMonth, 1).toLocaleString('ru', {month:'long', year:'numeric'});
+}
+
+function updateDashLabel() {
+  const el = document.getElementById('dash-date');
+  if(el) el.textContent = getDashLabel();
+  const sub = document.getElementById('d-bal-period');
+  if(sub) {
+    if(selMode === 'all')  sub.textContent = 'за всё время';
+    else if(selMode === 'year') sub.textContent = 'за ' + selYear + ' год';
+    else sub.textContent = 'net this month';
+  }
+}
+
+function dashNavigate(dir) {
+  if(selMode === 'all') return;
+  if(selMode === 'year') { selYear += dir; updateDashLabel(); renderDash(); return; }
+  selMonth += dir;
+  if(selMonth < 0) { selMonth = 11; selYear--; }
+  if(selMonth > 11){ selMonth = 0;  selYear++; }
+  updateDashLabel();
+  renderDash();
+}
+
+function toggleDashDrop(e) {
+  e.stopPropagation();
+  const d = document.getElementById('dash-drop');
+  const isOpen = d.classList.contains('open');
+  d.classList.toggle('open');
+  if(!isOpen) buildDropMonths();
+}
+
+function buildDropMonths() {
+  dropYear = (selMode !== 'all') ? selYear : new Date().getFullYear();
+  document.getElementById('drop-year-lbl').textContent = 'Месяц — ' + dropYear;
+  const now = new Date();
+  document.getElementById('drop-months').innerHTML = MONTHS_SHORT.map((m, i) => {
+    const active  = selMode === 'month' && selYear === dropYear && selMonth === i;
+    const future  = dropYear > now.getFullYear() || (dropYear === now.getFullYear() && i > now.getMonth());
+    return `<button class="pd-pill${active?' active':''}" style="${future?'opacity:0.3;pointer-events:none':''}" onclick="dashSelectMonth(${i},event)">${m}</button>`;
+  }).join('');
+  document.getElementById('drop-year-nav').innerHTML =
+    `<button class="pd-pill" onclick="changeDY(-1,event)">← ${dropYear-1}</button>
+     <button class="pd-pill" onclick="changeDY(1,event)">→ ${dropYear+1}</button>`;
+  // highlight year pills
+  const curY = new Date().getFullYear();
+  const pillYCur  = document.getElementById('pill-y-cur');
+  const pillYPrev = document.getElementById('pill-y-prev');
+  const pillAll   = document.getElementById('pill-all');
+  if(pillYCur)  { pillYCur.textContent  = curY + ' год'; pillYCur.className  = 'pd-pill' + (selMode==='year'&&selYear===curY?' active':''); }
+  if(pillYPrev) { pillYPrev.textContent = (curY-1) + ' год'; pillYPrev.className = 'pd-pill' + (selMode==='year'&&selYear===curY-1?' active':''); }
+  if(pillAll)   { pillAll.className = 'pd-pill special' + (selMode==='all'?' active':''); }
+}
+
+function dashSelectMonth(i, e) {
+  e.stopPropagation();
+  selMonth = i; selYear = dropYear; selMode = 'month';
+  document.getElementById('dash-drop').classList.remove('open');
+  updateDashLabel(); renderDash();
+}
+
+function dashSelectAllTime(e) {
+  e.stopPropagation();
+  selMode = 'all';
+  document.getElementById('dash-drop').classList.remove('open');
+  updateDashLabel(); renderDash();
+}
+
+function dashSelectYear(y, e) {
+  e.stopPropagation();
+  selYear = y; selMode = 'year';
+  document.getElementById('dash-drop').classList.remove('open');
+  updateDashLabel(); renderDash();
+}
+
+function changeDY(dir, e) {
+  e.stopPropagation();
+  dropYear += dir; buildDropMonths();
+}
+
+document.addEventListener('click', () => {
+  document.getElementById('dash-drop')?.classList.remove('open');
+});
+
+// ════ DASHBOARD RENDER ════
 function renderDash() {
   if(!G) return;
-
-  // Если выбранный месяц = текущий — берём из G (он уже посчитан)
-  const now = new Date();
   let inc, exp, byProject, byCategory;
-  if(false) {
-    // G.income/expense не используем — считаем из транзакций через amountEur
+  const now = new Date();
+
+  if(selMode === 'all') {
+    const s = getStatsForPeriod(null, null);
+    inc = s.income; exp = s.expense; byProject = s.byProject; byCategory = s.byCategory;
+  } else if(selMode === 'year') {
+    const s = getStatsForPeriod(new Date(selYear,0,1), new Date(selYear,11,31,23,59,59));
+    inc = s.income; exp = s.expense; byProject = s.byProject; byCategory = s.byCategory;
   } else {
-    const s = getStatsForMonth(selYear, selMonth);
-    inc = s.income; exp = s.expense;
-    byProject = s.byProject; byCategory = s.byCategory;
+    if(selYear === now.getFullYear() && selMonth === now.getMonth()) {
+      inc = G.income||0; exp = G.expense||0;
+      byProject = G.byProject||{}; byCategory = G.byCategory||{};
+    } else {
+      const s = getStatsForMonth(selYear, selMonth);
+      inc = s.income; exp = s.expense; byProject = s.byProject; byCategory = s.byCategory;
+    }
   }
 
-  const bal = inc-exp, tot = inc+exp;
-  const ip = tot ? Math.round(inc/tot*100) : 0;
-  const ep = tot ? Math.round(exp/tot*100) : 0;
+  const bal = inc - exp;
+  const tot = inc + exp;
+  const ip  = tot ? Math.round(inc/tot*100) : 0;
+  const ep  = tot ? Math.round(exp/tot*100) : 0;
 
-  set('d-balance', fE(bal));
-  set('d-bal-pct', (bal>=0?'+':'')+fE(bal));
-  set('d-income',  fE(inc));
-  set('d-expense', fE(exp));
-  set('ring-inc-pct', ip+'%');
-  set('ring-exp-pct', ep+'%');
+  set('d-balance',     fE(bal));
+  set('d-bal-pct',     (bal >= 0 ? '+' : '') + fE(bal));
+  set('d-income',      fE(inc));
+  set('d-expense',     fE(exp));
+  set('ring-inc-pct',  ip + '%');
+  set('ring-exp-pct',  ep + '%');
   drawRing('ring-inc', ip);
   drawRing('ring-exp', ep);
   drawMini(G.monthly||{});
@@ -845,40 +900,42 @@ function renderDash() {
   const er = Object.entries(byCategory).sort(([,a],[,b])=>b-a).slice(0,4);
   set('sum-inc-rows', ir.map(([k,v])=>sRow(k,fE(v.income||0))).join('')||sRow('Нет данных','—'));
   set('sum-exp-rows', er.map(([k,v])=>sRow(k,fE(v))).join('')||sRow('Нет данных','—'));
+
+  updateDashLabel();
 }
 
 function sRow(n,v){ return `<div class="sum-row"><span class="sum-row-n">${n}</span><span class="sum-row-v">${v}</span></div>`; }
 
 function drawRing(id, pct) {
-  const c=document.getElementById(id); if(!c) return;
-  const ex=Chart.getChart(c); if(ex) ex.destroy();
+  const c = document.getElementById(id); if(!c) return;
+  const ex = Chart.getChart(c); if(ex) ex.destroy();
   new Chart(c.getContext('2d'),{type:'doughnut',data:{datasets:[{data:[pct,100-pct],backgroundColor:['#ffffff','#2a2a2a'],borderWidth:0,borderRadius:3}]},options:{cutout:'72%',responsive:false,plugins:{legend:{display:false},tooltip:{enabled:false}},animation:{duration:700}}});
 }
 
 function drawMini(monthly) {
-  const c=document.getElementById('mini-line'); if(!c) return;
-  const ex=Chart.getChart(c); if(ex) ex.destroy();
-  const months=Object.keys(monthly).slice(-8);
-  const vals=months.map(m=>(monthly[m]?.income||0)-(monthly[m]?.expense||0));
-  const ctx=c.getContext('2d');
-  const g=ctx.createLinearGradient(0,0,400,0);
+  const c = document.getElementById('mini-line'); if(!c) return;
+  const ex = Chart.getChart(c); if(ex) ex.destroy();
+  const months = Object.keys(monthly).slice(-8);
+  const vals   = months.map(m=>(monthly[m]?.income||0)-(monthly[m]?.expense||0));
+  const ctx = c.getContext('2d');
+  const g = ctx.createLinearGradient(0,0,400,0);
   g.addColorStop(0,'rgba(255,255,255,0.02)'); g.addColorStop(1,'rgba(255,255,255,0.15)');
   new Chart(ctx,{type:'line',data:{labels:months,datasets:[{data:vals,borderColor:'rgba(255,255,255,0.3)',borderWidth:1.5,pointRadius:vals.map((_,i)=>i===vals.length-1?4:0),pointBackgroundColor:'#fff',fill:true,backgroundColor:g,tension:0.4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}}}});
 }
 
 function drawOv(n) {
   if(!G) return;
-  const monthly=G.monthly||{}, keys=Object.keys(monthly).slice(-n);
-  const c=document.getElementById('ov-chart'); if(!c) return;
+  const monthly = G.monthly||{}, keys = Object.keys(monthly).slice(-n);
+  const c = document.getElementById('ov-chart'); if(!c) return;
   if(ovChart) ovChart.destroy();
-  ovChart=new Chart(c.getContext('2d'),{type:'line',data:{labels:keys,datasets:[
-    {label:'Доходы',data:keys.map(k=>monthly[k]?.income||0),borderColor:'rgba(255,255,255,0.8)',borderWidth:1.5,pointRadius:3,pointBackgroundColor:'#fff',fill:false,tension:0.4},
-    {label:'Расходы',data:keys.map(k=>monthly[k]?.expense||0),borderColor:'rgba(255,255,255,0.25)',borderWidth:1.5,pointRadius:3,pointBackgroundColor:'rgba(255,255,255,0.3)',fill:false,tension:0.4}
+  ovChart = new Chart(c.getContext('2d'),{type:'line',data:{labels:keys,datasets:[
+    {label:'Доходы', data:keys.map(k=>monthly[k]?.income||0),  borderColor:'rgba(255,255,255,0.8)', borderWidth:1.5,pointRadius:3,pointBackgroundColor:'#fff',fill:false,tension:0.4},
+    {label:'Расходы',data:keys.map(k=>monthly[k]?.expense||0), borderColor:'rgba(255,255,255,0.25)',borderWidth:1.5,pointRadius:3,pointBackgroundColor:'rgba(255,255,255,0.3)',fill:false,tension:0.4}
   ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1c1c1c',borderColor:'#2a2a2a',borderWidth:1,titleColor:'#666',bodyColor:'#fff',padding:10,callbacks:{label:c=>' '+fE(c.parsed.y)}}},scales:{x:{ticks:{color:'#555',font:{size:10}},grid:{color:'#1e1e1e'},border:{color:'#2a2a2a'}},y:{ticks:{color:'#555',font:{size:10,family:'DM Mono'},callback:v=>fS(v)},grid:{color:'#1e1e1e'},border:{color:'#2a2a2a'}}}}});
 }
 
 function setOvPeriod(n,btn) {
-  ovPeriod=n;
+  ovPeriod = n;
   document.querySelectorAll('#page-dashboard .ptab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   drawOv(n);
@@ -897,25 +954,45 @@ function getProjectEntries(byProject) {
       income:  byProject[name].income  || 0,
       expense: byProject[name].expense || 0,
       profit:  (byProject[name].income||0) - (byProject[name].expense||0),
-      margin:  byProject[name].income ? Math.round(((byProject[name].income - byProject[name].expense) / byProject[name].income)*100) : 0
+      margin:  byProject[name].income ? Math.round(((byProject[name].income-byProject[name].expense)/byProject[name].income)*100) : 0
     }))
     .filter(p => p.income > 0 || p.expense > 0);
+}
+
+function updateProjLabel() {
+  const d = new Date(projYear, projMonth, 1);
+  const lbl = d.toLocaleString('ru', {month:'long', year:'numeric'});
+  const el = document.getElementById('proj-date');
+  if(el) el.textContent = lbl;
+}
+
+function projNavigate(dir) {
+  projMonth += dir;
+  if(projMonth < 0) { projMonth = 11; projYear--; }
+  if(projMonth > 11){ projMonth = 0;  projYear++; }
+  updateProjLabel(); renderProjects();
+}
+
+function updateAccLabel() {
+  const d = new Date();
+  const el = document.getElementById('acc-date');
+  if(el) el.textContent = d.toLocaleString('ru', {month:'long', year:'numeric'});
 }
 
 function renderProjects() {
   if(!G) return;
   const now = new Date();
   let bp, pm;
-  if(selYear === now.getFullYear() && selMonth === now.getMonth()) {
+  if(projYear === now.getFullYear() && projMonth === now.getMonth()) {
     bp = G.byProject||{}; pm = G.projectMonthly||{};
   } else {
-    const s = getStatsForMonth(selYear, selMonth);
+    const s = getStatsForMonth(projYear, projMonth);
     bp = s.byProject; pm = G.projectMonthly||{};
   }
   const entries = getProjectEntries(bp);
   const tInc = entries.reduce((s,p)=>s+p.income,0);
   const tExp = entries.reduce((s,p)=>s+p.expense,0);
-  const tPro = tInc-tExp;
+  const tPro = tInc - tExp;
 
   set('ps-rev',  fE(tInc));
   set('ps-exp',  fE(tExp));
@@ -924,7 +1001,7 @@ function renderProjects() {
   set('ps-rev-ch','—'); set('ps-exp-ch','—'); set('ps-prof-ch','—');
 
   set('pt-rows', entries.map(p=>{
-    const emoji=EMOJIS[p.name]||'📁';
+    const emoji = EMOJIS[p.name]||'📁';
     return `<div class="pt-row">
       <div class="pt-name-cell">
         <div class="proj-dot" style="background:${p.color}22;color:${p.color}">${emoji}</div>
@@ -945,9 +1022,9 @@ function renderProjects() {
   drawProjDonut(entries, tPro);
 
   if(entries.length) {
-    const top=[...entries].sort((a,b)=>b.profit-a.profit)[0];
-    const low=[...entries].sort((a,b)=>a.profit-b.profit)[0];
-    const eff=[...entries].sort((a,b)=>b.margin-a.margin)[0];
+    const top = [...entries].sort((a,b)=>b.profit-a.profit)[0];
+    const low = [...entries].sort((a,b)=>a.profit-b.profit)[0];
+    const eff = [...entries].sort((a,b)=>b.margin-a.margin)[0];
     set('perf-rows',`
       <div class="perf-row"><div class="perf-ico up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div><div class="perf-info"><div class="perf-type">Top Performer</div><div class="perf-name">${top.name}</div></div><div class="perf-val">${fE(top.profit)}</div></div>
       <div class="perf-row"><div class="perf-ico dn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg></div><div class="perf-info"><div class="perf-type">Lowest Performer</div><div class="perf-name">${low.name}</div></div><div class="perf-val">${fE(low.profit)}</div></div>
@@ -957,28 +1034,30 @@ function renderProjects() {
 }
 
 function drawProjLine(entries, pm, n) {
-  const allM=new Set(); Object.values(pm).forEach(p=>Object.keys(p).forEach(m=>allM.add(m)));
-  const months=[...allM].slice(-n);
+  const allM = new Set();
+  Object.values(pm).forEach(p => Object.keys(p).forEach(m => allM.add(m)));
+  const months = [...allM].slice(-n);
   set('proj-legend', entries.map(p=>`<div class="proj-leg-item"><div class="proj-leg-dot" style="background:${p.color}"></div>${p.name}</div>`).join(''));
-  const c=document.getElementById('proj-line'); if(!c) return;
+  const c = document.getElementById('proj-line'); if(!c) return;
   if(projLineChart) projLineChart.destroy();
-  projLineChart=new Chart(c.getContext('2d'),{type:'line',data:{labels:months,datasets:entries.map(p=>({label:p.name,data:months.map(m=>{const d=pm[p.name]?.[m];return d?(d.income||0)-(d.expense||0):0;}),borderColor:p.color,borderWidth:1.5,pointRadius:2,pointBackgroundColor:p.color,fill:false,tension:0.4}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1c1c1c',borderColor:'#2a2a2a',borderWidth:1,titleColor:'#666',bodyColor:'#fff',padding:10,callbacks:{label:c=>` ${c.dataset.label}: ${fE(c.parsed.y)}`}}},scales:{x:{ticks:{color:'#555',font:{size:10}},grid:{color:'#1a1a1a'},border:{color:'#2a2a2a'}},y:{ticks:{color:'#555',font:{size:10,family:'DM Mono'},callback:v=>fS(v)},grid:{color:'#1a1a1a'},border:{color:'#2a2a2a'}}}}});
+  projLineChart = new Chart(c.getContext('2d'),{type:'line',data:{labels:months,datasets:entries.map(p=>({label:p.name,data:months.map(m=>{const d=pm[p.name]?.[m];return d?(d.income||0)-(d.expense||0):0;}),borderColor:p.color,borderWidth:1.5,pointRadius:2,pointBackgroundColor:p.color,fill:false,tension:0.4}))},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1c1c1c',borderColor:'#2a2a2a',borderWidth:1,titleColor:'#666',bodyColor:'#fff',padding:10,callbacks:{label:c=>` ${c.dataset.label}: ${fE(c.parsed.y)}`}}},scales:{x:{ticks:{color:'#555',font:{size:10}},grid:{color:'#1a1a1a'},border:{color:'#2a2a2a'}},y:{ticks:{color:'#555',font:{size:10,family:'DM Mono'},callback:v=>fS(v)},grid:{color:'#1a1a1a'},border:{color:'#2a2a2a'}}}}});
 }
 
 function drawProjDonut(entries, totalProfit) {
-  const profits=entries.map(p=>Math.max(0,p.profit)), total=profits.reduce((s,v)=>s+v,0);
-  const c=document.getElementById('proj-donut'); if(!c) return;
+  const profits = entries.map(p=>Math.max(0,p.profit));
+  const total   = profits.reduce((s,v)=>s+v,0);
+  const c = document.getElementById('proj-donut'); if(!c) return;
   if(projDonutChart) projDonutChart.destroy();
-  projDonutChart=new Chart(c.getContext('2d'),{type:'doughnut',data:{labels:entries.map(p=>p.name),datasets:[{data:profits,backgroundColor:entries.map(p=>p.color),borderWidth:0,borderRadius:3}]},options:{cutout:'68%',responsive:false,plugins:{legend:{display:false},tooltip:{enabled:false}},animation:{duration:700}}});
+  projDonutChart = new Chart(c.getContext('2d'),{type:'doughnut',data:{labels:entries.map(p=>p.name),datasets:[{data:profits,backgroundColor:entries.map(p=>p.color),borderWidth:0,borderRadius:3}]},options:{cutout:'68%',responsive:false,plugins:{legend:{display:false},tooltip:{enabled:false}},animation:{duration:700}}});
   set('donut-total', fS(totalProfit));
   set('donut-legend', entries.map(p=>{
-    const pct=total?Math.round(Math.max(0,p.profit)/total*100):0;
+    const pct = total ? Math.round(Math.max(0,p.profit)/total*100) : 0;
     return `<div class="dl-row"><div class="dl-l"><div class="dl-dot" style="background:${p.color}"></div><span class="dl-name">${p.name}</span></div><span class="dl-pct">${pct}%</span></div>`;
   }).join(''));
 }
 
-function setProjPeriod(n,btn) {
-  prPeriod=n;
+function setProjPeriod(n, btn) {
+  prPeriod = n;
   document.querySelectorAll('#page-projects .ptab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   if(!G) return;
@@ -994,7 +1073,9 @@ function renderAccounts() {
   const typeEmoji = {'Карта':'💳','Крипта':'🪙','Наличные':'💵','Другое':'🏦'};
   if(!entries.length){ set('acc-list','<div style="padding:20px;color:var(--muted);text-align:center">Нет счетов</div>'); return; }
   set('acc-list', entries.map(([name,info])=>{
-    const emoji=typeEmoji[info.type]||'🏦', val=info.balance||0, cls=val>=0?'var(--green)':'var(--red)';
+    const emoji = typeEmoji[info.type]||'🏦';
+    const val   = info.balance||0;
+    const cls   = val >= 0 ? 'var(--green)' : 'var(--red)';
     return `<div class="acc-row"><div class="acc-left"><div class="acc-icon">${emoji}</div><div><div class="acc-name">${name}</div><div class="acc-type">${info.type||'Счёт'}</div></div></div><div><div class="acc-bal" style="color:${cls}">${val>=0?'+':''}${fmt(val)}</div><div class="acc-cur">${info.currency}</div></div></div>`;
   }).join(''));
 }
@@ -1016,83 +1097,70 @@ function buildCalendar() {
   const months_ru = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
   set('cal-month-label', months_ru[calMonth]+' '+calYear);
 
-  // Month strip stats — через amountEur для всех валют
-  let mInc=0, mExp=0;
+  let mInc = 0, mExp = 0;
   const firstDay = new Date(calYear, calMonth, 1);
   const lastDay  = new Date(calYear, calMonth+1, 0, 23,59,59);
   for(const tx of allTx) {
     if(!tx.date || tx.type==='Перевод') continue;
     const dt = new Date(tx.date);
     if(dt < firstDay || dt > lastDay) continue;
-    const val = tx.amountEur !== null && tx.amountEur !== undefined ? tx.amountEur : tx.amount;
-    if(tx.type==='Доход')  mInc += val;
-    if(tx.type==='Расход') mExp += val;
+    const amt = (tx.amountEur !== null && tx.amountEur !== undefined) ? tx.amountEur : tx.amount;
+    if(tx.type==='Доход')  mInc += amt;
+    if(tx.type==='Расход') mExp += amt;
   }
   const net = mInc - mExp;
   set('cal-inc-total', '+'+fE(mInc));
   set('cal-exp-total', '-'+fE(mExp));
   const netEl = document.getElementById('cal-net-total');
-  if(netEl){ 
-    netEl.textContent=(net>=0?'+':'')+fE(net); 
-    netEl.style.color=net>=0?'var(--green)':'var(--red)'; 
-  }
+  if(netEl){ netEl.textContent=(net>=0?'+':'')+fE(net); netEl.style.color=net>=0?'var(--green)':'var(--red)'; }
 
-  // Build grid
   let startDow = new Date(calYear, calMonth, 1).getDay();
-  startDow = (startDow+6)%7; // Mon=0
+  startDow = (startDow+6)%7;
   const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
   const daysInPrev  = new Date(calYear, calMonth, 0).getDate();
 
   const cells = [];
   for(let i=startDow-1; i>=0; i--) cells.push({day:daysInPrev-i, month:'prev'});
   for(let d=1; d<=daysInMonth; d++) cells.push({day:d, month:'cur'});
-  const rem=(7-(cells.length%7))%7;
+  const rem = (7-(cells.length%7))%7;
   for(let d=1; d<=rem; d++) cells.push({day:d, month:'next'});
 
-  const now=new Date();
-  const todayStr=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+  const now = new Date();
+  const todayStr = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
 
-  const grid=document.getElementById('cal-grid'); if(!grid) return;
-  grid.innerHTML='';
+  const grid = document.getElementById('cal-grid'); if(!grid) return;
+  grid.innerHTML = '';
 
   cells.forEach(cell => {
-    const div=document.createElement('div');
-    div.className='cal-day';
-    if(cell.month!=='cur') div.classList.add('other-month');
+    const div = document.createElement('div');
+    div.className = 'cal-day';
+    if(cell.month !== 'cur') div.classList.add('other-month');
 
-    let dateStr=null;
-    if(cell.month==='cur') {
-      dateStr=calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(cell.day).padStart(2,'0');
-      if(dateStr===todayStr) div.classList.add('today');
-      if(calSelected===dateStr) div.classList.add('selected');
+    let dateStr = null;
+    if(cell.month === 'cur') {
+      dateStr = calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(cell.day).padStart(2,'0');
+      if(dateStr === todayStr) div.classList.add('today');
+      if(calSelected === dateStr) div.classList.add('selected');
     }
 
-    const numEl=document.createElement('div');
-    numEl.className='cal-day-num';
-    numEl.textContent=cell.day;
+    const numEl = document.createElement('div');
+    numEl.className = 'cal-day-num';
+    numEl.textContent = cell.day;
     div.appendChild(numEl);
 
     if(dateStr && calTxMap[dateStr]) {
-      const txs=calTxMap[dateStr];
-      // Считаем через amountEur если есть, иначе amount
-      const incAmt=txs
-        .filter(t=>t.type==='Доход')
-        .reduce((s,t)=>s+(t.amountEur !== null && t.amountEur !== undefined ? t.amountEur : t.amount || 0), 0);
-      const expAmt=txs
-        .filter(t=>t.type==='Расход')
-        .reduce((s,t)=>s+(t.amountEur !== null && t.amountEur !== undefined ? t.amountEur : t.amount || 0), 0);
-      
-      if(incAmt > 0 || expAmt > 0) {
-        const sumEl=document.createElement('div');
-        sumEl.className='cal-day-sum';
-        if(incAmt>0) sumEl.innerHTML+=`<div class="cal-inc">+${fmtShort(incAmt)}</div>`;
-        if(expAmt>0) sumEl.innerHTML+=`<div class="cal-exp">-${fmtShort(expAmt)}</div>`;
-        div.appendChild(sumEl);
-      }
+      const txs    = calTxMap[dateStr];
+      const incAmt = txs.filter(t=>t.type==='Доход').reduce((s,t)=>s+((t.amountEur!==null&&t.amountEur!==undefined)?t.amountEur:t.amount||0),0);
+      const expAmt = txs.filter(t=>t.type==='Расход').reduce((s,t)=>s+((t.amountEur!==null&&t.amountEur!==undefined)?t.amountEur:t.amount||0),0);
+      const sumEl  = document.createElement('div');
+      sumEl.className = 'cal-day-sum';
+      if(incAmt>0) sumEl.innerHTML += `<div class="cal-inc">+${fmtShort(incAmt)}</div>`;
+      if(expAmt>0) sumEl.innerHTML += `<div class="cal-exp">-${fmtShort(expAmt)}</div>`;
+      div.appendChild(sumEl);
     }
 
-    if(cell.month==='cur' && dateStr) {
-      div.style.cursor='pointer';
+    if(cell.month === 'cur' && dateStr) {
+      div.style.cursor = 'pointer';
       div.addEventListener('click', (e) => calSelectDay(e, dateStr, cell.day));
     }
     grid.appendChild(div);
@@ -1100,20 +1168,20 @@ function buildCalendar() {
 }
 
 function calSelectDay(e, dateStr, dayNum) {
-  calSelected=dateStr;
+  calSelected = dateStr;
   document.querySelectorAll('.cal-day').forEach(d=>d.classList.remove('selected'));
   e.currentTarget.classList.add('selected');
 
-  const months_ru=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+  const months_ru = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
   set('cal-side-date', dayNum+' '+months_ru[calMonth]+' '+calYear);
 
-  const txs=calTxMap[dateStr]||[];
+  const txs = calTxMap[dateStr]||[];
   if(!txs.length){ set('cal-side-txs','<div class="cal-no-tx">Нет транзакций</div>'); return; }
 
-  const symb={UAH:'₴',EUR:'€',USD:'$',USDT:'USDT',ETH:'ETH'};
-  const rows=txs.map(tx=>{
-    const isInc=tx.type==='Доход';
-    const s=symb[tx.currency]||tx.currency;
+  const symb = {UAH:'₴',EUR:'€',USD:'$',USDT:'USDT',ETH:'ETH'};
+  const rows = txs.map(tx=>{
+    const isInc = tx.type==='Доход';
+    const s = symb[tx.currency]||tx.currency;
     return `<div class="cal-tx-row">
       <div class="cal-tx-dot ${isInc?'income':'expense'}"></div>
       <div class="cal-tx-info">
@@ -1130,29 +1198,13 @@ function calPrev(){ calMonth--; if(calMonth<0){calMonth=11;calYear--;} calSelect
 function calNext(){ calMonth++; if(calMonth>11){calMonth=0;calYear++;} calSelected=null; buildCalendar(); }
 function calGoToday(){ const n=new Date(); calYear=n.getFullYear(); calMonth=n.getMonth(); calSelected=null; buildCalendar(); }
 
-// ── utils ──
+// ════ UTILS ════
 function set(id,html){ const e=document.getElementById(id); if(e) e.innerHTML=html; }
-function fE(n){ 
-  const abs = Math.abs(n);
-  const rounded = Math.round(abs * 100) / 100;
-  const parts = rounded.toFixed(2).split('.');
-  const intPart = parseInt(parts[0]).toLocaleString('ru');
-  return (n<0?'- ':'')+'€ '+intPart+','+parts[1];
-}
+function fE(n){ const a=Math.abs(Math.round(n)); return (n<0?'- ':'')+'€ '+a.toLocaleString('ru')+',00'; }
 function fS(n){ if(Math.abs(n)>=1000) return '€'+(n/1000).toFixed(1)+'k'; return '€'+Math.round(n); }
-function fmtShort(n){ 
-  if(Math.abs(n) < 0.01) return '0';
-  if(Math.abs(n)>=1000) return (n/1000).toFixed(1)+'k'; 
-  if(Math.abs(n) < 10) return n.toFixed(2);
-  if(Math.abs(n) < 100) return n.toFixed(1);
-  return String(Math.round(n)); 
-}
-function fmt(n){ 
-  const abs = Math.abs(n);
-  const rounded = Math.round(abs * 100) / 100;
-  if(rounded === Math.floor(rounded)) return Math.floor(rounded).toLocaleString('ru');
-  return rounded.toLocaleString('ru', {minimumFractionDigits:2, maximumFractionDigits:2});
-}
+function fmtShort(n){ if(n>=1000) return (n/1000).toFixed(1)+'k'; return String(Math.round(n)); }
+function fmt(n){ return Math.round(Math.abs(n)).toLocaleString('ru'); }
+
 // ════ TRADES ════
 let allTrades = [];
 let tradesFilter = 'all';
@@ -1176,15 +1228,14 @@ async function loadTrades() {
 
 function renderTradesStats(s) {
   if(!s) return;
-  const pnlEl = document.getElementById('tr-pnl');
-  const winEl = document.getElementById('tr-winrate');
-  set('tr-total',   String(s.total || 0));
-  set('tr-wins',    String(s.wins  || 0));
-  set('tr-losses',  String(s.losses|| 0));
-  const wr = (s.winrate||0).toFixed(1) + '%';
-  if(winEl) { winEl.textContent = wr; }
+  set('tr-total',  String(s.total || 0));
+  set('tr-wins',   String(s.wins  || 0));
+  set('tr-losses', String(s.losses|| 0));
+  const wrEl = document.getElementById('tr-winrate');
+  if(wrEl) wrEl.textContent = (s.winrate||0).toFixed(1) + '%';
   const bar = document.getElementById('tr-winrate-bar');
   if(bar) bar.style.width = Math.min(100, s.winrate||0) + '%';
+  const pnlEl = document.getElementById('tr-pnl');
   if(pnlEl) {
     const pnl = s.totalPnl || 0;
     pnlEl.textContent = (pnl >= 0 ? '+' : '') + pnl.toFixed(2) + ' $';
@@ -1200,84 +1251,65 @@ function renderTradesStats(s) {
 
 function filterTrades(f, btn) {
   tradesFilter = f;
-  document.querySelectorAll('#page-trades .ptab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#page-trades .ptab').forEach(b=>b.classList.remove('active'));
   if(btn) btn.classList.add('active');
   renderTradesList();
 }
 
 function renderTradesList() {
-  const list = document.getElementById('trades-list');
-  if(!list) return;
-
+  const list = document.getElementById('trades-list'); if(!list) return;
   let trades = [...allTrades].reverse();
   if(tradesFilter === 'long')  trades = trades.filter(t => t.direction === 'LONG');
   if(tradesFilter === 'short') trades = trades.filter(t => t.direction === 'SHORT');
-
   if(!trades.length) {
     list.innerHTML = '<div style="color:var(--muted);text-align:center;padding:32px;font-size:12px">Нет сделок · Добавь через Telegram бота</div>';
     return;
   }
-
   list.innerHTML = trades.map(t => {
     const isLong   = t.direction === 'LONG';
     const isPos    = (t.pnl || 0) >= 0;
     const sign     = isPos ? '+' : '';
-    const dt       = new Date(t.date).toLocaleDateString('ru', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+    const dt       = new Date(t.date).toLocaleDateString('ru', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
     const isClosed = t.status === 'Закрыта' || !t.status;
-
     return `<div class="trade-card">
       <div class="trade-card-top">
         <div class="trade-pair">
-          <span class="trade-pair-name">${t.pair || '—'}</span>
-          <span class="trade-dir ${isLong ? 'long' : 'short'}">${t.direction || '—'}</span>
-          ${t.leverage ? `<span class="trade-lev">${t.leverage}x</span>` : ''}
+          <span class="trade-pair-name">${t.pair||'—'}</span>
+          <span class="trade-dir ${isLong?'long':'short'}">${t.direction||'—'}</span>
+          ${t.leverage?`<span class="trade-lev">${t.leverage}x</span>`:''}
         </div>
-        <div class="trade-status">
-          <div class="trade-status-dot ${isClosed ? '' : 'open'}"></div>
-          ${t.status || 'Закрыта'}
-        </div>
+        <div class="trade-status"><div class="trade-status-dot ${isClosed?'':'open'}"></div>${t.status||'Закрыта'}</div>
       </div>
       <div class="trade-levels">
-        <div class="trade-level">
-          <div class="trade-level-label">Вход</div>
-          <div class="trade-level-val">${t.entry || '—'}</div>
-        </div>
-        <div class="trade-level">
-          <div class="trade-level-label">SL</div>
-          <div class="trade-level-val sl">${t.sl || '—'}</div>
-        </div>
-        <div class="trade-level">
-          <div class="trade-level-label">TP</div>
-          <div class="trade-level-val tp">${t.tp || '—'}</div>
-        </div>
+        <div class="trade-level"><div class="trade-level-label">Вход</div><div class="trade-level-val">${t.entry||'—'}</div></div>
+        <div class="trade-level"><div class="trade-level-label">SL</div><div class="trade-level-val sl">${t.sl||'—'}</div></div>
+        <div class="trade-level"><div class="trade-level-label">TP</div><div class="trade-level-val tp">${t.tp||'—'}</div></div>
       </div>
       <div class="trade-pnl-row">
         <span class="trade-pnl-label">Итоговый PnL</span>
         <div>
-          <span class="trade-pnl-val ${isPos ? 'pos' : 'neg'}">${sign}${(t.pnl||0).toFixed(2)} USDT</span>
-          ${t.pnlPct ? `<span class="trade-pnl-pct">(${sign}${t.pnlPct}%)</span>` : ''}
+          <span class="trade-pnl-val ${isPos?'pos':'neg'}">${sign}${(t.pnl||0).toFixed(2)} USDT</span>
+          ${t.pnlPct?`<span class="trade-pnl-pct">(${sign}${t.pnlPct}%)</span>`:''}
         </div>
       </div>
       <div class="trade-meta">
         <span>${dt}</span>
-        ${t.exchange ? `<span>${t.exchange}</span>` : ''}
-        ${t.margin ? `<span>${t.margin}</span>` : ''}
+        ${t.exchange?`<span>${t.exchange}</span>`:''}
+        ${t.margin?`<span>${t.margin}</span>`:''}
       </div>
     </div>`;
   }).join('');
 }
 
 // ════ CONNECTIONS ════
-let connectionsData = [];
-
 const EXCHANGE_INFO = {
-  'Binance':  { emoji: '🟡', color: '#f0b90b', type: 'CEX · Спот + Фьючерсы' },
-  'Bybit':    { emoji: '🟠', color: '#f7a600', type: 'CEX · Фьючерсы + Спот' },
-  'Kraken':   { emoji: '🟣', color: '#5741d9', type: 'CEX · Спот' },
-  'Coinbase': { emoji: '🔵', color: '#1652f0', type: 'CEX · Спот' },
-  'OKX':      { emoji: '⚫', color: '#ffffff', type: 'CEX · Спот + Фьючерсы' },
-  'MetaMask': { emoji: '🦊', color: '#f6851b', type: 'Кошелёк · EVM' },
-  'Другое':   { emoji: '🔗', color: '#666666', type: 'Подключение' }
+  'Binance': {emoji:'🟡',color:'#f0b90b',type:'CEX · Спот + Фьючерсы'},
+  'Bybit':   {emoji:'🟠',color:'#f7a600',type:'CEX · Фьючерсы + Спот'},
+  'Kraken':  {emoji:'🟣',color:'#5741d9',type:'CEX · Спот'},
+  'Coinbase':{emoji:'🔵',color:'#1652f0',type:'CEX · Спот'},
+  'OKX':     {emoji:'⚫',color:'#ffffff',type:'CEX · Спот + Фьючерсы'},
+  'MetaMask':{emoji:'🦊',color:'#f6851b',type:'Кошелёк · EVM'},
+  'Другое':  {emoji:'🔗',color:'#666666',type:'Подключение'}
 };
 
 async function loadConnections() {
@@ -1285,78 +1317,50 @@ async function loadConnections() {
     const r = await fetch(API + '?action=getConnections');
     const d = await r.json();
     if(d && d.connections) {
-      connectionsData = d.connections;
       renderConnections(d.connections);
       const el = document.getElementById('conn-last-sync');
-      if(el) el.textContent = new Date().toLocaleString('ru', {hour:'2-digit',minute:'2-digit',day:'numeric',month:'short'});
+      if(el) el.textContent = new Date().toLocaleString('ru',{hour:'2-digit',minute:'2-digit',day:'numeric',month:'short'});
       const cnt = document.getElementById('conn-count');
-      if(cnt) cnt.textContent = d.connections.length + ' подключени' + (d.connections.length === 1 ? 'е' : 'й');
+      if(cnt) cnt.textContent = d.connections.length + ' подключени' + (d.connections.length===1?'е':'й');
     }
-  } catch(e) {
-    renderConnections([]);
-    console.error('Connections load error:', e);
-  }
+  } catch(e) { renderConnections([]); console.error('Connections load error:', e); }
 }
 
 function renderConnections(conns) {
-  const grid = document.getElementById('conn-grid');
-  if(!grid) return;
-
+  const grid = document.getElementById('conn-grid'); if(!grid) return;
   let html = '';
   for(const c of conns) {
     const info = EXCHANGE_INFO[c.exchange] || EXCHANGE_INFO['Другое'];
     const balStr = c.balance !== null && c.balance !== undefined
-      ? (c.balanceCurrency === 'USDT' || c.balanceCurrency === 'USD' ? '$' : '€') + Number(c.balance).toLocaleString('ru', {maximumFractionDigits:2})
+      ? (c.balanceCurrency==='USDT'||c.balanceCurrency==='USD'?'$':'€') + Number(c.balance).toLocaleString('ru',{maximumFractionDigits:2})
       : '—';
-    const pnlStr = c.pnl !== null && c.pnl !== undefined
-      ? (c.pnl >= 0 ? '+' : '') + Number(c.pnl).toFixed(2) + ' $'
-      : null;
-
     html += `<div class="conn-card connected">
       <div class="conn-card-top">
         <div class="conn-logo" style="background:${info.color}18;font-size:22px">${info.emoji}</div>
-        <div class="conn-status">
-          <div class="conn-status-dot on"></div>
-          <span style="color:var(--green)">Подключено</span>
-        </div>
+        <div class="conn-status"><div class="conn-status-dot on"></div><span style="color:var(--green)">Подключено</span></div>
       </div>
       <div class="conn-name">${c.exchange}</div>
       <div class="conn-type">${info.type}</div>
       <div class="conn-meta">
-        ${c.label ? `<div class="conn-meta-row"><span class="conn-meta-label">Название</span><span class="conn-meta-val">${c.label}</span></div>` : ''}
-        <div class="conn-meta-row"><span class="conn-meta-label">Проект</span><span class="conn-meta-val">${c.project || '—'}</span></div>
-        <div class="conn-meta-row"><span class="conn-meta-label">Категория</span><span class="conn-meta-val">${c.category || '—'}</span></div>
-        ${c.balance !== null && c.balance !== undefined ? `<div class="conn-meta-row"><span class="conn-meta-label">Баланс</span><span class="conn-meta-val pos">${balStr}</span></div>` : ''}
-        ${pnlStr ? `<div class="conn-meta-row"><span class="conn-meta-label">PnL за месяц</span><span class="conn-meta-val ${c.pnl >= 0 ? 'pos' : 'neg'}">${pnlStr}</span></div>` : ''}
-        <div class="conn-meta-row"><span class="conn-meta-label">API Key</span><span class="conn-meta-val" style="color:var(--muted)">${c.apiKeyMasked || '••••••••'}</span></div>
+        ${c.label?`<div class="conn-meta-row"><span class="conn-meta-label">Название</span><span class="conn-meta-val">${c.label}</span></div>`:''}
+        <div class="conn-meta-row"><span class="conn-meta-label">Проект</span><span class="conn-meta-val">${c.project||'—'}</span></div>
+        <div class="conn-meta-row"><span class="conn-meta-label">Категория</span><span class="conn-meta-val">${c.category||'—'}</span></div>
+        ${c.balance!==null&&c.balance!==undefined?`<div class="conn-meta-row"><span class="conn-meta-label">Баланс</span><span class="conn-meta-val pos">${balStr}</span></div>`:''}
+        <div class="conn-meta-row"><span class="conn-meta-label">API Key</span><span class="conn-meta-val" style="color:var(--muted)">${c.apiKeyMasked||'••••••••'}</span></div>
       </div>
-      <button class="conn-btn disconnect" onclick="disconnectExchange('${c.exchange}', '${c.id || ''}')">Отключить</button>
+      <button class="conn-btn disconnect" onclick="disconnectExchange('${c.exchange}','${c.id||''}')">Отключить</button>
     </div>`;
   }
-
-  // Add new connection card
   html += `<div class="conn-add-card" onclick="openTgConnect()">
-    <div class="conn-add-ico">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-    </div>
+    <div class="conn-add-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
     <div class="conn-add-txt">Добавить биржу<br>или кошелёк</div>
   </div>`;
-
   if(!conns.length) {
-    // Show all supported exchanges as empty cards
-    const exchanges = ['Binance','Bybit','Kraken','Coinbase','OKX','MetaMask'];
-    html = exchanges.map(ex => {
+    html = ['Binance','Bybit','Kraken','Coinbase','OKX','MetaMask'].map(ex=>{
       const info = EXCHANGE_INFO[ex];
       return `<div class="conn-card" style="opacity:0.5">
-        <div class="conn-card-top">
-          <div class="conn-logo" style="font-size:22px">${info.emoji}</div>
-          <div class="conn-status">
-            <div class="conn-status-dot off"></div>
-            <span>Не подключено</span>
-          </div>
-        </div>
-        <div class="conn-name">${ex}</div>
-        <div class="conn-type">${info.type}</div>
+        <div class="conn-card-top"><div class="conn-logo" style="font-size:22px">${info.emoji}</div><div class="conn-status"><div class="conn-status-dot off"></div><span>Не подключено</span></div></div>
+        <div class="conn-name">${ex}</div><div class="conn-type">${info.type}</div>
         <button class="conn-btn" onclick="openTgConnect()">Подключить</button>
       </div>`;
     }).join('') + `<div class="conn-add-card" onclick="openTgConnect()">
@@ -1364,17 +1368,10 @@ function renderConnections(conns) {
       <div class="conn-add-txt">Подключить через Telegram</div>
     </div>`;
   }
-
   grid.innerHTML = html;
-
-  const cnt = document.getElementById('conn-count');
-  if(cnt) cnt.textContent = conns.length + ' подключени' + (conns.length === 1 ? 'е' : 'й');
 }
 
-function openTgConnect() {
-  // Открываем бота с командой /connect
-  window.open('https://t.me/myfinance_yourname_bot?start=connect');
-}
+function openTgConnect() { window.open('https://t.me/myfinance_yourname_bot?start=connect'); }
 
 function disconnectExchange(exchange, id) {
   if(!confirm('Отключить ' + exchange + '?')) return;
