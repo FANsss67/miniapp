@@ -1013,7 +1013,7 @@ function buildCalendar() {
   const months_ru = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
   set('cal-month-label', months_ru[calMonth]+' '+calYear);
 
-  // Month strip stats — считаем из allTx
+  // Month strip stats — через amountEur для всех валют
   let mInc=0, mExp=0;
   const firstDay = new Date(calYear, calMonth, 1);
   const lastDay  = new Date(calYear, calMonth+1, 0, 23,59,59);
@@ -1021,15 +1021,18 @@ function buildCalendar() {
     if(!tx.date || tx.type==='Перевод') continue;
     const dt = new Date(tx.date);
     if(dt < firstDay || dt > lastDay) continue;
-    if(tx.currency !== 'EUR' && tx.currency !== 'UAH') continue;
-    if(tx.type==='Доход')  mInc += tx.amount;
-    if(tx.type==='Расход') mExp += tx.amount;
+    const val = tx.amountEur !== null && tx.amountEur !== undefined ? tx.amountEur : tx.amount;
+    if(tx.type==='Доход')  mInc += val;
+    if(tx.type==='Расход') mExp += val;
   }
   const net = mInc - mExp;
   set('cal-inc-total', '+'+fE(mInc));
   set('cal-exp-total', '-'+fE(mExp));
   const netEl = document.getElementById('cal-net-total');
-  if(netEl){ netEl.textContent=(net>=0?'+':'')+fE(net); netEl.style.color=net>=0?'var(--green)':'var(--red)'; }
+  if(netEl){ 
+    netEl.textContent=(net>=0?'+':'')+fE(net); 
+    netEl.style.color=net>=0?'var(--green)':'var(--red)'; 
+  }
 
   // Build grid
   let startDow = new Date(calYear, calMonth, 1).getDay();
@@ -1068,13 +1071,21 @@ function buildCalendar() {
 
     if(dateStr && calTxMap[dateStr]) {
       const txs=calTxMap[dateStr];
-      const incAmt=txs.filter(t=>t.type==='Доход').reduce((s,t)=>s+(t.amount||0),0);
-      const expAmt=txs.filter(t=>t.type==='Расход').reduce((s,t)=>s+(t.amount||0),0);
-      const sumEl=document.createElement('div');
-      sumEl.className='cal-day-sum';
-      if(incAmt>0) sumEl.innerHTML+=`<div class="cal-inc">+${fmtShort(incAmt)}</div>`;
-      if(expAmt>0) sumEl.innerHTML+=`<div class="cal-exp">-${fmtShort(expAmt)}</div>`;
-      div.appendChild(sumEl);
+      // Считаем через amountEur если есть, иначе amount
+      const incAmt=txs
+        .filter(t=>t.type==='Доход')
+        .reduce((s,t)=>s+(t.amountEur !== null && t.amountEur !== undefined ? t.amountEur : t.amount || 0), 0);
+      const expAmt=txs
+        .filter(t=>t.type==='Расход')
+        .reduce((s,t)=>s+(t.amountEur !== null && t.amountEur !== undefined ? t.amountEur : t.amount || 0), 0);
+      
+      if(incAmt > 0 || expAmt > 0) {
+        const sumEl=document.createElement('div');
+        sumEl.className='cal-day-sum';
+        if(incAmt>0) sumEl.innerHTML+=`<div class="cal-inc">+${fmtShort(incAmt)}</div>`;
+        if(expAmt>0) sumEl.innerHTML+=`<div class="cal-exp">-${fmtShort(expAmt)}</div>`;
+        div.appendChild(sumEl);
+      }
     }
 
     if(cell.month==='cur' && dateStr) {
